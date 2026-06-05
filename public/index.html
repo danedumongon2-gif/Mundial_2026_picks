@@ -151,41 +151,16 @@
     <!-- TAB: CONFIG -->
     <div id="tab-config" style="display:none">
       <div class="card">
-        <div class="section-title" style="font-size:20px;color:#ffc107">⚙️ CONFIGURAR GROQ API KEY</div>
-        <div style="font-size:12px;color:#546e7a;margin-bottom:20px;line-height:1.7">
-          Groq es <strong style="color:#00e676">100% gratis</strong>, sin tarjeta de crédito.<br>
-          Necesitas una API key personal de <span style="color:#448aff">console.groq.com</span>
+        <div class="section-title" style="font-size:20px;color:#00e676">✅ API CONFIGURADA</div>
+        <div style="font-size:13px;color:#546e7a;line-height:1.8;margin-bottom:16px">
+          Tu API key de Groq está guardada en el servidor de Vercel.<br>
+          No necesitas hacer nada más — simplemente ve a <strong style="color:#eceff1">📊 Análisis</strong> y presiona Analizar.
         </div>
-
-        <div class="card" style="border-color:#ffc10733;padding:16px;margin-bottom:18px">
-          <div style="font-size:12px;font-weight:700;color:#ffc107;margin-bottom:12px">📋 Cómo obtener tu key (2 minutos):</div>
-          <div style="display:flex;flex-direction:column;gap:6px">
-            <div style="font-size:12px;color:#546e7a;padding:5px 8px;border-left:3px solid #ffc10766">1. Ve a <strong style="color:#448aff">console.groq.com</strong></div>
-            <div style="font-size:12px;color:#546e7a;padding:5px 8px;border-left:3px solid #ffc10766">2. Crea cuenta con tu email (gratis, sin tarjeta)</div>
-            <div style="font-size:12px;color:#546e7a;padding:5px 8px;border-left:3px solid #ffc10766">3. Click en <strong style="color:#eceff1">"API Keys"</strong> en el menú izquierdo</div>
-            <div style="font-size:12px;color:#546e7a;padding:5px 8px;border-left:3px solid #ffc10766">4. Click en <strong style="color:#eceff1">"Create API Key"</strong></div>
-            <div style="font-size:12px;color:#546e7a;padding:5px 8px;border-left:3px solid #ffc10766">5. Copia la key (empieza con <code style="color:#00e676">gsk_...</code>)</div>
-            <div style="font-size:12px;color:#546e7a;padding:5px 8px;border-left:3px solid #ffc10766">6. Pégala abajo y guarda</div>
-          </div>
-          <div style="font-size:11px;color:#00e676;margin-top:12px;background:#00e67611;padding:8px 10px;border-radius:7px">
-            💰 Límite gratuito: ~1,000 análisis/día · Completamente gratis
-          </div>
+        <div style="background:#00e67611;border:1px solid #00e67633;border-radius:10px;padding:14px;margin-bottom:16px">
+          <div style="font-size:12px;color:#00e676;font-weight:700;margin-bottom:4px">✓ GROQ_API_KEY activa en Vercel</div>
+          <div style="font-size:11px;color:#546e7a">~1,000 análisis gratuitos por día · Sin tarjeta de crédito</div>
         </div>
-
-        <div style="margin-bottom:14px">
-          <div style="font-size:11px;color:#546e7a;margin-bottom:6px">TU GROQ API KEY</div>
-          <div style="display:flex;gap:8px">
-            <input type="password" id="api-key-input" class="input-field" placeholder="gsk_..." style="font-family:monospace"/>
-            <button onclick="toggleKey()" id="toggle-btn" style="background:#0b0f1a;border:1px solid #1e2d45;border-radius:8px;color:#546e7a;cursor:pointer;padding:0 12px;font-size:14px;flex-shrink:0">👁</button>
-          </div>
-        </div>
-        <button onclick="saveKey()" class="primary-btn">GUARDAR API KEY</button>
-        <div id="key-status" style="display:none;margin-top:10px;font-size:12px;color:#00e676;text-align:center"></div>
-
-        <div style="margin-top:18px;font-size:11px;color:#37474f;background:#0b0f1a;border-radius:8px;padding:10px 12px;line-height:1.6">
-          🔒 Tu API key se guarda en tu dispositivo (localStorage). Solo se envía a api.groq.com para hacer las consultas. Nadie más la ve.
-        </div>
-      </div>
+        <div id="key-status" style="display:none;font-size:12px;color:#00e676;text-align:center"></div>
 
       <!-- Deploy instructions -->
       <div class="card">
@@ -259,8 +234,7 @@ let state = {
   picks: [],
   saved: [],
   cache: {},
-  apiKey: localStorage.getItem("groq_key") || "",
-  apiBase: "",  // set after deploy; empty = use relative /api/team
+  apiBase: "",  // key lives on server via Vercel env var GROQ_API_KEY
 };
 
 // ── Init ──────────────────────────────────────────────────────────────────────
@@ -278,12 +252,10 @@ function init() {
   try { state.saved = JSON.parse(localStorage.getItem("saved_picks") || "[]"); } catch(e){}
   updateCartera();
 
-  if (!state.apiKey) showWarn(); else hideWarn();
-  if (state.apiKey) {
-    document.getElementById("api-key-input").value = state.apiKey;
-    document.getElementById("key-status").style.display = "block";
-    document.getElementById("key-status").textContent = "✓ API key configurada";
-  }
+  // Key lives on the server (Vercel env var) — no client check needed
+  hideWarn();
+  document.getElementById("key-status").style.display = "block";
+  document.getElementById("key-status").textContent = "✓ API key configurada en el servidor";
 }
 
 // ── Tabs ──────────────────────────────────────────────────────────────────────
@@ -331,7 +303,6 @@ async function fetchTeam(teamName) {
 
 // ── Analyze ───────────────────────────────────────────────────────────────────
 async function analyze() {
-  if (!state.apiKey) { showWarn(); switchTab("config"); return; }
 
   const t1 = document.getElementById("team1-select").value;
   const t2 = document.getElementById("team2-select").value;
