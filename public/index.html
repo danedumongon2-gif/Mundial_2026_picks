@@ -151,16 +151,24 @@
     <!-- TAB: CONFIG -->
     <div id="tab-config" style="display:none">
       <div class="card">
-        <div class="section-title" style="font-size:20px;color:#00e676">✅ API CONFIGURADA</div>
-        <div style="font-size:13px;color:#546e7a;line-height:1.8;margin-bottom:16px">
-          Tu API key de Groq está guardada en el servidor de Vercel.<br>
-          No necesitas hacer nada más — simplemente ve a <strong style="color:#eceff1">📊 Análisis</strong> y presiona Analizar.
+        <div class="section-title" style="font-size:20px;color:#ffc107">⚙️ GROQ API KEY</div>
+        <div style="font-size:12px;color:#546e7a;margin-bottom:18px;line-height:1.7">
+          Groq es <strong style="color:#00e676">100% gratis</strong>, sin tarjeta.<br>
+          Consíguela en <strong style="color:#448aff">console.groq.com</strong> → API Keys → Create Key.<br>
+          La key empieza con <code style="color:#00e676">gsk_...</code>
         </div>
-        <div style="background:#00e67611;border:1px solid #00e67633;border-radius:10px;padding:14px;margin-bottom:16px">
-          <div style="font-size:12px;color:#00e676;font-weight:700;margin-bottom:4px">✓ GROQ_API_KEY activa en Vercel</div>
-          <div style="font-size:11px;color:#546e7a">~1,000 análisis gratuitos por día · Sin tarjeta de crédito</div>
+        <div style="margin-bottom:14px">
+          <div style="font-size:11px;color:#546e7a;margin-bottom:6px">TU GROQ API KEY</div>
+          <div style="display:flex;gap:8px">
+            <input type="password" id="api-key-input" class="input-field" placeholder="gsk_..." style="font-family:monospace"/>
+            <button onclick="toggleKey()" id="toggle-btn" style="background:#0b0f1a;border:1px solid #1e2d45;border-radius:8px;color:#546e7a;cursor:pointer;padding:0 12px;font-size:14px;flex-shrink:0">👁</button>
+          </div>
         </div>
-        <div id="key-status" style="display:none;font-size:12px;color:#00e676;text-align:center"></div>
+        <button onclick="saveKey()" class="primary-btn">GUARDAR API KEY</button>
+        <div id="key-status" style="display:none;margin-top:10px;font-size:13px;color:#00e676;text-align:center;font-weight:700"></div>
+        <div style="margin-top:14px;font-size:11px;color:#37474f;background:#0b0f1a;border-radius:8px;padding:10px 12px;line-height:1.6">
+          🔒 La key se guarda solo en tu teléfono. Se envía directamente a api.groq.com.
+        </div>
 
       <!-- Deploy instructions -->
       <div class="card">
@@ -252,10 +260,16 @@ function init() {
   try { state.saved = JSON.parse(localStorage.getItem("saved_picks") || "[]"); } catch(e){}
   updateCartera();
 
-  // Key lives on the server (Vercel env var) — no client check needed
-  hideWarn();
-  document.getElementById("key-status").style.display = "block";
-  document.getElementById("key-status").textContent = "✓ API key configurada en el servidor";
+  // Restore key if saved
+  const savedKey = localStorage.getItem("groq_key");
+  if (savedKey) {
+    document.getElementById("api-key-input").value = savedKey;
+    document.getElementById("key-status").style.display = "block";
+    document.getElementById("key-status").textContent = "✓ API key guardada — listo para analizar";
+    hideWarn();
+  } else {
+    showWarn();
+  }
 }
 
 // ── Tabs ──────────────────────────────────────────────────────────────────────
@@ -280,25 +294,42 @@ function onTeamChange() {
 async function fetchTeam(teamName) {
   if (state.cache[teamName]) return state.cache[teamName];
 
-  // Determine endpoint
-  const endpoint = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    ? `http://localhost:3000/api/team`
-    : `/api/team`;
+  const key = localStorage.getItem("groq_key");
+  if (!key) throw new Error("Falta la API key. Ve a ⚙️ Config y guárdala.");
 
-  const res = await fetch(endpoint, {
+  const prompt = `You are a football statistics expert. Provide REAL statistics for the ${teamName} national football team based on their 2024 and 2025 international matches. Use your knowledge of recent tournaments: World Cup 2026 qualifiers, Copa América 2024, Euro 2024, AFCON 2025, Nations League, and friendlies 2024-2025.
+
+Return ONLY a valid JSON object, no markdown, no explanation:
+{"rank":<FIFA ranking integer>,"form":<avg points per game 0.0-3.0>,"gs":<avg goals scored per match>,"gc":<avg goals conceded per match>,"corners":<avg corners per match>,"yellows":<avg yellow cards per match>,"reds":<avg red cards per match>,"att":<attack strength 0-100>,"def":<defense strength 0-100>,"confederation":"UEFA or CONMEBOL or CONCACAF or AFC or CAF or OFC","last5":["W 2-0 vs X","D 1-1 vs Y","L 0-1 vs Z","W 1-0 vs A","W 3-1 vs B"],"keyPlayers":["Player1","Player2","Player3"],"notes":"one sentence about current form"}`;
+
+  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ team: teamName }),
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${key}`,
+    },
+    body: JSON.stringify({
+      model: "llama-3.3-70b-versatile",
+      temperature: 0.2,
+      max_tokens: 800,
+      messages: [{ role: "user", content: prompt }],
+    }),
   });
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err.error || `HTTP ${res.status}`);
+    const msg = err?.error?.message || `Error ${res.status}`;
+    if (res.status === 401) throw new Error("API key inválida. Ve a ⚙️ Config y corrígela.");
+    throw new Error(msg);
   }
 
   const data = await res.json();
-  state.cache[teamName] = data;
-  return data;
+  const text = data.choices?.[0]?.message?.content || "";
+  const match = text.match(/\{[\s\S]*\}/);
+  if (!match) throw new Error("Respuesta inesperada de Groq");
+  const parsed = JSON.parse(match[0]);
+  state.cache[teamName] = parsed;
+  return parsed;
 }
 
 // ── Analyze ───────────────────────────────────────────────────────────────────
@@ -580,12 +611,12 @@ function removePick(i) {
 // ── Config ────────────────────────────────────────────────────────────────────
 function saveKey() {
   const val = document.getElementById("api-key-input").value.trim();
-  if (!val.startsWith("gsk_")) { alert("La key de Groq debe empezar con gsk_"); return; }
-  state.apiKey = val;
+  if (!val.startsWith("gsk_")) { alert("La key de Groq debe empezar con gsk_\n\nVe a console.groq.com para obtenerla gratis."); return; }
   localStorage.setItem("groq_key", val);
   document.getElementById("key-status").style.display = "block";
-  document.getElementById("key-status").textContent = "✓ API key guardada correctamente";
+  document.getElementById("key-status").textContent = "✓ API key guardada — ya puedes analizar partidos";
   hideWarn();
+  setTimeout(() => switchTab("analisis"), 1200);
 }
 
 function toggleKey() {
