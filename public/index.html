@@ -297,14 +297,19 @@ async function fetchTeam(teamName) {
   const key = localStorage.getItem("gemini_key");
   if (!key) throw new Error("Falta la API key. Ve a ⚙️ Config y guárdala.");
 
+  // AQ. keys use v1alpha, AIza keys use v1beta
+  const isNewFormat = key.startsWith("AQ.");
+  const baseUrl = isNewFormat
+    ? `https://generativelanguage.googleapis.com/v1alpha/models/gemini-2.0-flash:generateContent?key=${key}`
+    : `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+
   const prompt = `You are a football statistics expert. Search and provide REAL and CURRENT statistics for the ${teamName} national football team from their last 2 years of matches (2024 and 2025). Include data from World Cup 2026 qualifiers, Copa América 2024, Euro 2024, AFCON 2025, Nations League, and recent friendlies.
 
 Return ONLY a valid JSON object, no markdown, no explanation, nothing else:
 {"rank":<current FIFA ranking integer>,"form":<avg points per game last 15 matches 0.0-3.0>,"gs":<avg goals scored per match>,"gc":<avg goals conceded per match>,"corners":<avg corners per match>,"yellows":<avg yellow cards per match>,"reds":<avg red cards per match>,"att":<attack strength 0-100>,"def":<defense strength 0-100>,"confederation":"UEFA or CONMEBOL or CONCACAF or AFC or CAF or OFC","last5":["W 2-0 vs Netherlands","D 1-1 vs Brazil","L 0-1 vs Spain","W 1-0 vs Morocco","W 3-1 vs Senegal"],"keyPlayers":["Player1","Player2","Player3"],"notes":"one sentence about current form and recent results"}`;
 
   // Use Gemini 2.0 Flash with Google Search grounding for real-time data
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,
+  const res = await fetch(baseUrl,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
