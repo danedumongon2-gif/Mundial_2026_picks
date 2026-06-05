@@ -155,12 +155,12 @@
         <div style="font-size:12px;color:#546e7a;margin-bottom:18px;line-height:1.7">
           Gemini es <strong style="color:#00e676">100% gratis</strong>, sin tarjeta, 1500 usos/día.<br>
           Consíguela en <strong style="color:#448aff">aistudio.google.com</strong> → Get API Key.<br>
-          La key empieza con <code style="color:#00e676">AIza...</code>
+          La key empieza con <code style="color:#00e676">AIza...</code> o <code style="color:#00e676">AQ....</code>
         </div>
         <div style="margin-bottom:14px">
           <div style="font-size:11px;color:#546e7a;margin-bottom:6px">TU GEMINI API KEY</div>
           <div style="display:flex;gap:8px">
-            <input type="password" id="api-key-input" class="input-field" placeholder="AIza..." style="font-family:monospace"/>
+            <input type="password" id="api-key-input" class="input-field" placeholder="AIza... o AQ.Ab8..." style="font-family:monospace"/>
             <button onclick="toggleKey()" id="toggle-btn" style="background:#0b0f1a;border:1px solid #1e2d45;border-radius:8px;color:#546e7a;cursor:pointer;padding:0 12px;font-size:14px;flex-shrink:0">👁</button>
           </div>
         </div>
@@ -611,7 +611,7 @@ function removePick(i) {
 // ── Config ────────────────────────────────────────────────────────────────────
 function saveKey() {
   const val = document.getElementById("api-key-input").value.trim();
-  if (!val.startsWith("AIza")) { alert("La key de Gemini debe empezar con AIza\n\nVe a aistudio.google.com para obtenerla gratis."); return; }
+  if (!val.startsWith("AIza") && !val.startsWith("AQ.")) { alert("Key inválida. Cópiala directamente desde aistudio.google.com"); return; }
   localStorage.setItem("gemini_key", val);
   document.getElementById("key-status").style.display = "block";
   document.getElementById("key-status").textContent = "✓ API key guardada — ya puedes analizar partidos";
