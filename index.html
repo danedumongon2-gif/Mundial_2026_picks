@@ -8,677 +8,756 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Picks 2026"/>
 <title>Picks Mundial 2026</title>
-<link rel="manifest" href="/manifest.json"/>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet"/>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  body{background:#0b0f1a;color:#eceff1;font-family:'Inter','Segoe UI',sans-serif;min-height:100vh;overscroll-behavior:none}
-  select{appearance:none;-webkit-appearance:none}
-  input,select,textarea,button{font-family:inherit}
-  ::-webkit-scrollbar{width:3px}
-  ::-webkit-scrollbar-thumb{background:#1e2d45;border-radius:2px}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  .fade{animation:fadeIn .35s ease both}
-  .spin{animation:spin 1s linear infinite}
-  .tab-btn{background:transparent;color:#546e7a;border:1px solid #1e2d45;border-radius:8px;padding:7px 14px;cursor:pointer;font-weight:700;font-size:12px;transition:all .2s;white-space:nowrap}
-  .tab-btn.active{background:#00e676;color:#0b0f1a;border-color:#00e676}
-  .card{background:#131929;border:1px solid #1e2d45;border-radius:14px;padding:18px;margin-bottom:16px}
-  .gauge-track{background:#0b0f1a;border-radius:4px;height:8px;overflow:hidden;margin-bottom:8px}
-  .gauge-fill{height:100%;border-radius:4px;transition:width .6s ease}
-  .stat-box{background:#0b0f1a;border-radius:10px;padding:9px 10px;text-align:center;flex:1;min-width:68px}
-  .stat-val{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;line-height:1}
-  .stat-lbl{font-size:9px;color:#546e7a;text-transform:uppercase;letter-spacing:.4px;margin-top:2px;line-height:1.2}
-  .stat-sub{font-size:8px;margin-top:1px}
-  .pick-row{border-radius:10px;padding:11px 13px;margin-bottom:9px;display:flex;align-items:flex-start;gap:10px}
-  .pick-name{color:#eceff1;font-weight:700;font-size:13px}
-  .pick-conf{font-size:12px;font-weight:700;border-radius:6px;padding:2px 8px;white-space:nowrap}
-  .pick-rat{color:#546e7a;font-size:11px;margin-top:3px}
-  .save-btn{border-radius:7px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
-  .result-pill{text-align:center;border-radius:8px;padding:8px 14px;flex:1}
-  .result-pct{font-family:'Bebas Neue',sans-serif;font-size:24px}
-  .result-lbl{font-size:9px;color:#546e7a}
-  .tag{font-size:10px;border-radius:5px;padding:2px 7px;display:inline-block}
-  .section-title{font-family:'Bebas Neue',sans-serif;letter-spacing:2px;margin-bottom:14px}
-  .compare-bar{height:7px;border-radius:3px;overflow:hidden;background:#0b0f1a}
-  .mini-divider{height:1px;background:#1e2d45;margin:10px 0}
-  .input-field{background:#0b0f1a;color:#eceff1;border:1px solid #1e2d45;border-radius:8px;padding:10px 12px;font-size:13px;width:100%;outline:none;transition:border-color .2s}
-  .input-field:focus{border-color:#00e676}
-  .primary-btn{background:#00e676;color:#0b0f1a;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:900;cursor:pointer;width:100%;font-family:'Bebas Neue',sans-serif;letter-spacing:1px;transition:all .2s}
-  .primary-btn:disabled{background:#1e2d45;color:#546e7a;cursor:not-allowed}
-  .alert{border-radius:9px;padding:10px 13px;margin-bottom:14px;font-size:12px}
-  .loader{width:34px;height:34px;border-width:3px;border-style:solid;border-radius:50%;margin:0 auto 10px}
-  details>summary{list-style:none;cursor:pointer}
-  details>summary::-webkit-details-marker{display:none}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#0b0f1a;color:#eceff1;font-family:'Inter','Segoe UI',sans-serif;min-height:100vh;overscroll-behavior:none}
+select,input,textarea,button{font-family:inherit}
+select{appearance:none;-webkit-appearance:none}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:#1e2d45;border-radius:2px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.fade{animation:fadeIn .4s ease both}
+.spin{animation:spin 1s linear infinite}
+.tab-btn{background:transparent;color:#546e7a;border:1px solid #1e2d45;border-radius:8px;padding:7px 13px;cursor:pointer;font-weight:700;font-size:12px;transition:all .2s;white-space:nowrap}
+.tab-btn.active{background:#00e676;color:#0b0f1a;border-color:#00e676}
+.card{background:#131929;border:1px solid #1e2d45;border-radius:14px;padding:16px;margin-bottom:14px}
+.gauge-track{background:#0b0f1a;border-radius:4px;height:8px;overflow:hidden;margin-bottom:8px}
+.gauge-fill{height:100%;border-radius:4px;transition:width .6s ease}
+.stat-box{background:#0b0f1a;border-radius:10px;padding:9px 10px;text-align:center;flex:1;min-width:68px}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;line-height:1}
+.stat-lbl{font-size:9px;color:#546e7a;text-transform:uppercase;letter-spacing:.4px;margin-top:2px;line-height:1.2}
+.stat-sub{font-size:8px;margin-top:1px}
+.pick-row{border-radius:10px;padding:11px 13px;margin-bottom:9px;display:flex;align-items:flex-start;gap:10px}
+.input-field{background:#0b0f1a;color:#eceff1;border:1px solid #1e2d45;border-radius:8px;padding:10px 12px;font-size:13px;width:100%;outline:none;transition:border-color .2s}
+.input-field:focus{border-color:#00e676}
+.primary-btn{background:#00e676;color:#0b0f1a;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:900;cursor:pointer;width:100%;font-family:'Bebas Neue',sans-serif;letter-spacing:1px;transition:all .2s}
+.primary-btn:disabled{background:#1e2d45;color:#546e7a;cursor:not-allowed}
+.section-title{font-family:'Bebas Neue',sans-serif;letter-spacing:2px;margin-bottom:12px}
+.tag{font-size:10px;border-radius:5px;padding:2px 7px;display:inline-block}
+.loader{width:32px;height:32px;border-width:3px;border-style:solid;border-radius:50%;margin:0 auto 10px}
+.value-badge{border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;display:inline-block}
+.hh-row{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border-radius:7px;margin-bottom:5px;font-size:12px}
+.parlay-item{background:#0b0f1a;border:1px solid #1e2d45;border-radius:9px;padding:10px 13px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
 </style>
 </head>
 <body>
-
 <div id="app">
 
-  <!-- HEADER -->
-  <div style="background:linear-gradient(135deg,#0a1628,#0d2137);border-bottom:1px solid #00e67633;padding:20px 16px 14px;position:sticky;top:0;z-index:100">
-    <div style="max-width:860px;margin:0 auto">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-        <span style="font-size:26px">⚽</span>
-        <div>
-          <h1 style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:3px;color:#00e676;line-height:1">PICKS MUNDIAL 2026</h1>
-          <p style="font-size:10px;color:#546e7a;letter-spacing:1px">ANÁLISIS EN VIVO · DATOS 2024–2025 · GROQ AI GRATIS</p>
-        </div>
-      </div>
-      <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none">
-        <button class="tab-btn active" id="btn-analisis" onclick="switchTab('analisis')">📊 Análisis</button>
-        <button class="tab-btn" id="btn-picks" onclick="switchTab('picks')">✦ Picks</button>
-        <button class="tab-btn" id="btn-cartera" onclick="switchTab('cartera')">🗂 Cartera (<span id="cartera-count">0</span>)</button>
-        <button class="tab-btn" id="btn-config" onclick="switchTab('config')">⚙️ Config</button>
+<!-- HEADER -->
+<div style="background:linear-gradient(135deg,#0a1628,#0d2137);border-bottom:1px solid #00e67633;padding:18px 14px 12px;position:sticky;top:0;z-index:100;backdrop-filter:blur(10px)">
+  <div style="max-width:860px;margin:0 auto">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <span style="font-size:24px">⚽</span>
+      <div>
+        <h1 style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:#00e676;line-height:1">PICKS MUNDIAL 2026</h1>
+        <p style="font-size:9px;color:#546e7a;letter-spacing:1px">ANÁLISIS · PICKS · PARLAY · VALOR · HEAD2HEAD</p>
       </div>
     </div>
-  </div>
-
-  <!-- CONTENT -->
-  <div style="max-width:860px;margin:0 auto;padding:16px 14px 40px" id="content">
-
-    <!-- TAB: ANÁLISIS -->
-    <div id="tab-analisis">
-
-      <!-- Selector -->
-      <div class="card">
-        <div style="font-size:10px;color:#546e7a;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px">SELECCIONAR PARTIDO</div>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:0" id="selector-row">
-          <div style="flex:1;min-width:140px;position:relative">
-            <select id="team1-select" style="width:100%;background:#0b0f1a;color:#eceff1;border:1px solid #448aff;border-radius:8px;padding:10px 10px;font-size:13px;font-weight:600;cursor:pointer" onchange="onTeamChange()"></select>
-          </div>
-          <span style="color:#ffc107;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px">VS</span>
-          <div style="flex:1;min-width:140px;position:relative">
-            <select id="team2-select" style="width:100%;background:#0b0f1a;color:#eceff1;border:1px solid #ffc107;border-radius:8px;padding:10px 10px;font-size:13px;font-weight:600;cursor:pointer" onchange="onTeamChange()"></select>
-          </div>
-          <button id="analyze-btn" onclick="analyze()" class="primary-btn" style="width:auto;padding:10px 20px;font-size:13px;flex-shrink:0">🔍 ANALIZAR</button>
-        </div>
-        <div id="result-pills" style="display:none;margin-top:14px;display:flex;gap:8px;flex-wrap:wrap"></div>
-      </div>
-
-      <!-- No API warning -->
-      <div id="no-api-warn" class="alert" style="background:#ffc10711;border:1px solid #ffc10744;color:#ffc107;display:none">
-        ⚠️ Primero configura tu API key gratuita de Groq.
-        <button onclick="switchTab('config')" style="background:#ffc107;color:#0b0f1a;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-weight:700;font-size:11px;margin-left:8px">Configurar →</button>
-      </div>
-
-      <!-- Team cards -->
-      <div id="team-cards" style="display:none;gap:12px" class="fade">
-        <div id="card1" class="card" style="border-color:#448aff44"></div>
-        <div id="card2" class="card" style="border-color:#ffc10744"></div>
-      </div>
-
-      <!-- Idle -->
-      <div id="idle-state" class="card" style="text-align:center;padding:50px 20px;color:#546e7a">
-        <div style="font-size:44px;margin-bottom:14px">🔍</div>
-        <div style="font-size:15px;font-weight:700;color:#eceff1;margin-bottom:8px">Selecciona dos equipos y presiona Analizar</div>
-        <div style="font-size:12px">Busca estadísticas reales 2024–2025 con Groq AI (gratis)</div>
-      </div>
-
-      <!-- Analysis results -->
-      <div id="analysis-results" style="display:none" class="fade"></div>
-    </div>
-
-    <!-- TAB: PICKS -->
-    <div id="tab-picks" style="display:none">
-      <div id="picks-content" class="card">
-        <div class="section-title" style="font-size:20px;color:#00e676">✦ PICKS RECOMENDADOS</div>
-        <div id="picks-match-label" style="font-size:12px;color:#546e7a;margin-bottom:16px"></div>
-        <div id="picks-list"></div>
-        <div id="picks-cats" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px"></div>
-      </div>
-      <div id="picks-empty" class="card" style="text-align:center;padding:40px 20px;color:#546e7a">
-        Primero analiza un partido para ver los picks.
-      </div>
-    </div>
-
-    <!-- TAB: CARTERA -->
-    <div id="tab-cartera" style="display:none">
-      <div class="card">
-        <div class="section-title" style="font-size:20px;color:#ffc107">🗂 MI CARTERA DE PICKS</div>
-        <div id="cartera-sub" style="font-size:12px;color:#546e7a;margin-bottom:16px">0 picks guardados</div>
-        <div id="cartera-list"></div>
-        <div id="cartera-summary" style="display:none;margin-top:12px;padding:11px;background:#0b0f1a;border-radius:9px;border:1px solid #00e67622;font-size:12px;color:#546e7a"></div>
-        <div id="cartera-empty" style="text-align:center;padding:40px 20px;color:#546e7a">
-          <div style="font-size:40px;margin-bottom:10px">📋</div>
-          Analiza partidos y guarda los picks que te interesen.
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB: CONFIG -->
-    <div id="tab-config" style="display:none">
-      <div class="card">
-        <div class="section-title" style="font-size:20px;color:#ffc107">⚙️ API KEY</div>
-        <div style="font-size:12px;color:#546e7a;margin-bottom:18px;line-height:1.7">
-          Usa tu key de <strong style="color:#00e676">Groq</strong> (gratis en console.groq.com).<br>
-          La key empieza con <code style="color:#00e676">gsk_...</code>
-        </div>
-        <div style="margin-bottom:14px">
-          <div style="font-size:11px;color:#546e7a;margin-bottom:6px">TU API KEY</div>
-          <div style="display:flex;gap:8px">
-            <input type="password" id="api-key-input" class="input-field" placeholder="gsk_..." style="font-family:monospace"/>
-            <button onclick="toggleKey()" id="toggle-btn" style="background:#0b0f1a;border:1px solid #1e2d45;border-radius:8px;color:#546e7a;cursor:pointer;padding:0 12px;font-size:14px;flex-shrink:0">👁</button>
-          </div>
-        </div>
-        <button onclick="saveKey()" class="primary-btn">GUARDAR API KEY</button>
-        <div id="key-status" style="display:none;margin-top:10px;font-size:13px;color:#00e676;text-align:center;font-weight:700"></div>
-        <div style="margin-top:14px;font-size:11px;color:#37474f;background:#0b0f1a;border-radius:8px;padding:10px 12px;line-height:1.6">
-          🔒 La key se guarda solo en tu teléfono. Se envía directamente a Google.
-        </div>
-
-      <!-- Deploy instructions -->
-      <div class="card">
-        <details>
-          <summary style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:#448aff;letter-spacing:2px;cursor:pointer">
-            🚀 INSTALAR COMO APP EN TU TELÉFONO ▾
-          </summary>
-          <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px">
-            <div style="background:#0b0f1a;border-radius:9px;padding:14px;border-left:3px solid #00e676">
-              <div style="font-size:12px;font-weight:700;color:#00e676;margin-bottom:6px">📱 iPhone (Safari)</div>
-              <div style="font-size:11px;color:#546e7a;line-height:1.7">
-                1. Abre la app en Safari<br>
-                2. Toca el botón <strong style="color:#eceff1">Compartir</strong> (cuadrado con flecha ↑)<br>
-                3. Toca <strong style="color:#eceff1">"Añadir a pantalla de inicio"</strong><br>
-                4. Dale un nombre y toca <strong style="color:#eceff1">Añadir</strong><br>
-                ✅ Aparece como app nativa con ícono ⚽
-              </div>
-            </div>
-            <div style="background:#0b0f1a;border-radius:9px;padding:14px;border-left:3px solid #448aff">
-              <div style="font-size:12px;font-weight:700;color:#448aff;margin-bottom:6px">🤖 Android (Chrome)</div>
-              <div style="font-size:11px;color:#546e7a;line-height:1.7">
-                1. Abre la app en Chrome<br>
-                2. Toca los <strong style="color:#eceff1">3 puntos</strong> del menú (⋮)<br>
-                3. Toca <strong style="color:#eceff1">"Añadir a pantalla de inicio"</strong><br>
-                4. Confirma<br>
-                ✅ Se instala como app con ícono ⚽
-              </div>
-            </div>
-            <div style="background:#0b0f1a;border-radius:9px;padding:14px;border-left:3px solid #ffc107">
-              <div style="font-size:12px;font-weight:700;color:#ffc107;margin-bottom:6px">🌐 Subir a internet (permanente)</div>
-              <div style="font-size:11px;color:#546e7a;line-height:1.7">
-                1. Ve a <strong style="color:#eceff1">vercel.com</strong> y crea cuenta gratis<br>
-                2. Sube la carpeta del proyecto (incluye este HTML, api/team.js, vercel.json)<br>
-                3. En Vercel → Settings → Environment Variables agrega:<br>
-                &nbsp;&nbsp;<code style="color:#00e676">GROQ_API_KEY = gsk_tukey...</code><br>
-                4. Deploy → obtienes URL pública para siempre gratis<br>
-                ✅ Funciona desde cualquier teléfono
-              </div>
-            </div>
-          </div>
-        </details>
-      </div>
-    </div>
-
-    <div style="margin-top:6px;padding:9px 12px;background:#131929;border-radius:9px;font-size:10px;color:#37474f;line-height:1.6">
-      ⚠️ Solo para análisis y entretenimiento. Las probabilidades son estimaciones estadísticas. Las apuestas implican riesgo económico. Juega con responsabilidad.
+    <div style="display:flex;gap:5px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none">
+      <button class="tab-btn active" id="btn-analisis" onclick="switchTab('analisis')">📊 Análisis</button>
+      <button class="tab-btn" id="btn-picks" onclick="switchTab('picks')">✦ Picks</button>
+      <button class="tab-btn" id="btn-valor" onclick="switchTab('valor')">💰 Valor</button>
+      <button class="tab-btn" id="btn-parlay" onclick="switchTab('parlay')">🎯 Parlay</button>
+      <button class="tab-btn" id="btn-cartera" onclick="switchTab('cartera')">🗂 Cartera (<span id="cartera-count">0</span>)</button>
+      <button class="tab-btn" id="btn-config" onclick="switchTab('config')">⚙️</button>
     </div>
   </div>
 </div>
 
+<div style="max-width:860px;margin:0 auto;padding:14px 13px 50px">
+
+<!-- TAB ANÁLISIS -->
+<div id="tab-analisis">
+  <!-- Selector -->
+  <div class="card">
+    <div style="font-size:9px;color:#546e7a;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px">SELECCIONAR PARTIDO</div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <select id="team1-select" onchange="onTeamChange()" style="flex:1;min-width:130px;background:#0b0f1a;color:#eceff1;border:1px solid #448aff;border-radius:8px;padding:10px 8px;font-size:13px;font-weight:600;cursor:pointer"></select>
+      <span style="color:#ffc107;font-family:'Bebas Neue',sans-serif;font-size:16px">VS</span>
+      <select id="team2-select" onchange="onTeamChange()" style="flex:1;min-width:130px;background:#0b0f1a;color:#eceff1;border:1px solid #ffc107;border-radius:8px;padding:10px 8px;font-size:13px;font-weight:600;cursor:pointer"></select>
+      <button id="analyze-btn" onclick="analyze()" class="primary-btn" style="width:auto;padding:10px 18px;font-size:13px;flex-shrink:0">🔍 ANALIZAR</button>
+    </div>
+
+    <!-- Lesionados / bajas -->
+    <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div>
+        <div style="font-size:9px;color:#448aff;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Bajas <span id="lbl-t1">Equipo 1</span></div>
+        <input class="input-field" id="injuries1" placeholder="Ej: Messi, Di María..." style="font-size:11px;padding:7px 9px"/>
+      </div>
+      <div>
+        <div style="font-size:9px;color:#ffc107;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Bajas <span id="lbl-t2">Equipo 2</span></div>
+        <input class="input-field" id="injuries2" placeholder="Ej: Modric, Gvardiol..." style="font-size:11px;padding:7px 9px"/>
+      </div>
+    </div>
+
+    <!-- Árbitro -->
+    <div style="margin-top:10px">
+      <div style="font-size:9px;color:#546e7a;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">⚖️ Árbitro (opcional)</div>
+      <input class="input-field" id="referee" placeholder="Nombre del árbitro..." style="font-size:11px;padding:7px 9px"/>
+    </div>
+
+    <!-- Sede / condiciones -->
+    <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div>
+        <div style="font-size:9px;color:#546e7a;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">🏟️ Ciudad/Sede</div>
+        <input class="input-field" id="venue" placeholder="Ej: MetLife Stadium..." style="font-size:11px;padding:7px 9px"/>
+      </div>
+      <div>
+        <div style="font-size:9px;color:#546e7a;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">🌡️ Condición</div>
+        <select id="weather" style="width:100%;background:#0b0f1a;color:#eceff1;border:1px solid #1e2d45;border-radius:8px;padding:7px 8px;font-size:11px;cursor:pointer">
+          <option value="normal">Normal</option>
+          <option value="calor">Calor extremo</option>
+          <option value="frio">Frío</option>
+          <option value="lluvia">Lluvia</option>
+          <option value="altitud">Alta altitud</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="result-pills" style="display:none;margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"></div>
+  </div>
+
+  <!-- API warning -->
+  <div id="no-api-warn" class="card" style="background:#ffc10711;border:1px solid #ffc10744;color:#ffc107;display:none;font-size:12px">
+    ⚠️ Configura tu API key de Groq primero.
+    <button onclick="switchTab('config')" style="background:#ffc107;color:#0b0f1a;border:none;border-radius:6px;padding:3px 10px;cursor:pointer;font-weight:700;font-size:11px;margin-left:8px">⚙️ Configurar</button>
+  </div>
+
+  <!-- Team cards -->
+  <div id="team-cards" style="display:none;gap:12px;flex-wrap:wrap" class="fade">
+    <div id="card1" class="card" style="flex:1;min-width:280px;border-color:#448aff44"></div>
+    <div id="card2" class="card" style="flex:1;min-width:280px;border-color:#ffc10744"></div>
+  </div>
+
+  <!-- Idle -->
+  <div id="idle-state" class="card" style="text-align:center;padding:44px 20px;color:#546e7a">
+    <div style="font-size:40px;margin-bottom:12px">🔍</div>
+    <div style="font-size:14px;font-weight:700;color:#eceff1;margin-bottom:6px">Selecciona dos equipos y presiona Analizar</div>
+    <div style="font-size:11px">Completa las bajas, árbitro y sede para un análisis más preciso</div>
+  </div>
+
+  <!-- Analysis panels -->
+  <div id="analysis-results" style="display:none" class="fade"></div>
+</div>
+
+<!-- TAB PICKS -->
+<div id="tab-picks" style="display:none">
+  <div id="picks-content" style="display:none">
+    <div class="card" style="border-color:#00e67633">
+      <div class="section-title" style="font-size:18px;color:#00e676">✦ PICKS RECOMENDADOS</div>
+      <div id="picks-match-label" style="font-size:11px;color:#546e7a;margin-bottom:14px"></div>
+      <div id="picks-list"></div>
+    </div>
+    <!-- Primera mitad -->
+    <div class="card" id="first-half-card">
+      <div class="section-title" style="font-size:16px;color:#448aff">⏱ PRIMERA MITAD</div>
+      <div id="first-half-picks"></div>
+    </div>
+    <!-- Hándicap asiático -->
+    <div class="card" id="handicap-card">
+      <div class="section-title" style="font-size:16px;color:#e040fb">🎯 HÁNDICAP ASIÁTICO</div>
+      <div id="handicap-picks"></div>
+    </div>
+  </div>
+  <div id="picks-empty" class="card" style="text-align:center;padding:40px;color:#546e7a">
+    Primero analiza un partido para ver los picks.
+  </div>
+</div>
+
+<!-- TAB VALOR -->
+<div id="tab-valor" style="display:none">
+  <div class="card">
+    <div class="section-title" style="font-size:18px;color:#ffc107">💰 CALCULADORA DE VALOR</div>
+    <div style="font-size:11px;color:#546e7a;margin-bottom:16px">Ingresa la cuota de la casa de apuestas para cada pick y la app calcula si tiene valor positivo (EV+)</div>
+    <div id="valor-picks-list"></div>
+    <div id="valor-empty" style="text-align:center;padding:30px;color:#546e7a;font-size:12px">Analiza un partido primero para calcular el valor de cada pick.</div>
+  </div>
+  <div class="card" style="border-color:#ffc10733">
+    <div class="section-title" style="font-size:14px;color:#ffc107">📚 ¿QUÉ ES EL VALOR (EV)?</div>
+    <div style="font-size:11px;color:#546e7a;line-height:1.7">
+      <strong style="color:#eceff1">EV+ (valor positivo)</strong> = la cuota que da la casa es mayor que la probabilidad real. Apostar aquí es rentable a largo plazo.<br><br>
+      <strong style="color:#eceff1">Fórmula:</strong> EV = (Prob % × Cuota) - 1<br><br>
+      <strong style="color:#00e676">EV > 0</strong> = apuesta con valor ✅<br>
+      <strong style="color:#ff5252">EV < 0</strong> = sin valor ❌
+    </div>
+  </div>
+</div>
+
+<!-- TAB PARLAY -->
+<div id="tab-parlay" style="display:none">
+  <div class="card">
+    <div class="section-title" style="font-size:18px;color:#e040fb">🎯 CONSTRUCTOR DE PARLAY</div>
+    <div style="font-size:11px;color:#546e7a;margin-bottom:14px">Agrega picks de diferentes partidos para calcular la probabilidad y cuota combinada</div>
+    <div id="parlay-list"></div>
+    <div id="parlay-empty" style="text-align:center;padding:20px;color:#546e7a;font-size:12px">Guarda picks desde la pestaña ✦ Picks para agregarlos al parlay.</div>
+    <div id="parlay-summary" style="display:none;margin-top:14px;background:#0b0f1a;border-radius:10px;padding:14px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+        <span style="font-size:11px;color:#546e7a">Probabilidad combinada</span>
+        <span id="parlay-prob" style="font-size:15px;font-weight:900;color:#e040fb"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+        <span style="font-size:11px;color:#546e7a">Cuota combinada estimada</span>
+        <span id="parlay-odds" style="font-size:15px;font-weight:900;color:#ffc107"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+        <span style="font-size:11px;color:#546e7a">Picks en el parlay</span>
+        <span id="parlay-count" style="font-size:15px;font-weight:900;color:#eceff1"></span>
+      </div>
+      <div style="font-size:9px;color:#37474f">⚠️ Cuota estimada basada en probabilidades. Verifica en tu casa de apuestas.</div>
+    </div>
+  </div>
+  <!-- Apuesta simulada -->
+  <div class="card">
+    <div class="section-title" style="font-size:14px;color:#ffc107">💵 SIMULAR APUESTA</div>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+      <input class="input-field" id="bet-amount" type="number" placeholder="Monto a apostar ($)" style="flex:1"/>
+    </div>
+    <div id="bet-result" style="display:none;background:#0b0f1a;border-radius:9px;padding:12px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+        <span style="font-size:11px;color:#546e7a">Si ganas</span>
+        <span id="bet-win" style="color:#00e676;font-weight:700"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between">
+        <span style="font-size:11px;color:#546e7a">Ganancia neta</span>
+        <span id="bet-profit" style="color:#ffc107;font-weight:700"></span>
+      </div>
+    </div>
+    <button onclick="calcBet()" class="primary-btn" style="margin-top:10px">CALCULAR</button>
+  </div>
+</div>
+
+<!-- TAB CARTERA -->
+<div id="tab-cartera" style="display:none">
+  <div class="card">
+    <div class="section-title" style="font-size:18px;color:#ffc107">🗂 MI CARTERA</div>
+    <div id="cartera-sub" style="font-size:11px;color:#546e7a;margin-bottom:14px">0 picks guardados</div>
+    <div id="cartera-list"></div>
+    <div id="cartera-empty" style="text-align:center;padding:36px;color:#546e7a">
+      <div style="font-size:36px;margin-bottom:10px">📋</div>
+      Analiza partidos y guarda picks.
+    </div>
+    <div id="cartera-summary" style="display:none;margin-top:10px;padding:11px;background:#0b0f1a;border-radius:9px;font-size:11px;color:#546e7a"></div>
+  </div>
+</div>
+
+<!-- TAB CONFIG -->
+<div id="tab-config" style="display:none">
+  <div class="card">
+    <div class="section-title" style="font-size:18px;color:#ffc107">⚙️ API KEY (GROQ)</div>
+    <div style="font-size:12px;color:#546e7a;margin-bottom:16px;line-height:1.7">
+      Gratis en <strong style="color:#448aff">console.groq.com</strong><br>
+      La key empieza con <code style="color:#00e676">gsk_...</code>
+    </div>
+    <div style="margin-bottom:12px">
+      <div style="display:flex;gap:8px">
+        <input type="password" id="api-key-input" class="input-field" placeholder="gsk_..." style="font-family:monospace"/>
+        <button onclick="toggleKey()" id="toggle-btn" style="background:#0b0f1a;border:1px solid #1e2d45;border-radius:8px;color:#546e7a;cursor:pointer;padding:0 12px;font-size:14px;flex-shrink:0">👁</button>
+      </div>
+    </div>
+    <button onclick="saveKey()" class="primary-btn">GUARDAR API KEY</button>
+    <div id="key-status" style="display:none;margin-top:10px;font-size:12px;color:#00e676;text-align:center;font-weight:700"></div>
+  </div>
+
+  <div class="card">
+    <details>
+      <summary style="font-family:'Bebas Neue',sans-serif;font-size:15px;color:#448aff;letter-spacing:2px;cursor:pointer">📱 INSTALAR EN TU TELÉFONO ▾</summary>
+      <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+        <div style="background:#0b0f1a;border-radius:9px;padding:12px;border-left:3px solid #00e676">
+          <div style="font-size:11px;font-weight:700;color:#00e676;margin-bottom:5px">iPhone (Safari)</div>
+          <div style="font-size:11px;color:#546e7a;line-height:1.7">Compartir ↑ → "Añadir a pantalla de inicio" → Añadir ✅</div>
+        </div>
+        <div style="background:#0b0f1a;border-radius:9px;padding:12px;border-left:3px solid #448aff">
+          <div style="font-size:11px;font-weight:700;color:#448aff;margin-bottom:5px">Android (Chrome)</div>
+          <div style="font-size:11px;color:#546e7a;line-height:1.7">Menú ⋮ → "Añadir a pantalla de inicio" ✅</div>
+        </div>
+      </div>
+    </details>
+  </div>
+</div>
+
+<div style="margin-top:6px;padding:9px 12px;background:#131929;border-radius:9px;font-size:10px;color:#37474f;line-height:1.6">
+  ⚠️ Solo para análisis y entretenimiento. Las apuestas implican riesgo económico. Juega con responsabilidad.
+</div>
+</div>
+</div>
+
 <script>
-// ── Data ─────────────────────────────────────────────────────────────────────
-const ALL_TEAMS = [
-  "Alemania","Argelia","Argentina","Arabia Saudí","Australia","Austria",
-  "Bélgica","Bosnia","Brasil","Cabo Verde","Canadá","Catar","Chequia",
-  "Colombia","Corea del Sur","Costa de Marfil","Croacia","Curazao",
-  "DR Congo","Ecuador","Egipto","Escocia","España","Estados Unidos",
-  "Francia","Ghana","Haití","Inglaterra","Irán","Irak","Japón","Jordania",
-  "Marruecos","México","Nigeria","Noruega","Nueva Zelanda","Países Bajos",
-  "Panamá","Paraguay","Portugal","Senegal","Suecia","Sudáfrica","Suiza",
-  "Túnez","Turquía","Uruguay","Uzbekistán"
-].sort();
+const ALL_TEAMS = ["Alemania","Argelia","Argentina","Arabia Saudí","Australia","Austria","Bélgica","Bosnia","Brasil","Cabo Verde","Canadá","Catar","Chequia","Colombia","Corea del Sur","Costa de Marfil","Croacia","Curazao","DR Congo","Ecuador","Egipto","Escocia","España","USA","Francia","Ghana","Haití","Inglaterra","Irán","Irak","Japón","Jordania","Marruecos","México","Noruega","Nueva Zelanda","Países Bajos","Panamá","Paraguay","Portugal","Senegal","Suecia","Sudáfrica","Suiza","Túnez","Turquía","Uruguay","Uzbekistán"].sort();
 
-// ── State ─────────────────────────────────────────────────────────────────────
-let state = {
-  tab: "analisis",
-  data1: null, data2: null,
-  loading1: false, loading2: false,
-  done: false,
-  match: null,
-  picks: [],
-  saved: [],
-  cache: {},
-  apiBase: "",  // key lives on server via Vercel env var GROQ_API_KEY
-};
+const C={bg:"#0b0f1a",card:"#131929",border:"#1e2d45",green:"#00e676",yellow:"#ffc107",red:"#ff5252",blue:"#448aff",purple:"#e040fb",dim:"#546e7a",text:"#eceff1"};
+const catColor={resultado:C.blue,goles:C.green,corners:C.yellow,tarjetas:C.red,"1T":C.blue,handicap:C.purple};
 
-// ── Init ──────────────────────────────────────────────────────────────────────
-function init() {
-  // Populate selects
-  const s1 = document.getElementById("team1-select");
-  const s2 = document.getElementById("team2-select");
-  ALL_TEAMS.forEach(t => {
-    s1.appendChild(new Option(t, t));
-    s2.appendChild(new Option(t, t));
-  });
-  s1.value = "Argentina"; s2.value = "Croacia";
+let state={tab:"analisis",data1:null,data2:null,l1:false,l2:false,done:false,match:null,picks:[],saved:[],parlay:[],cache:{}};
 
-  // Restore saved picks
-  try { state.saved = JSON.parse(localStorage.getItem("saved_picks") || "[]"); } catch(e){}
-  updateCartera();
-
-  // Restore key if saved
-  const savedKey = localStorage.getItem("gemini_key");
-  if (savedKey) {
-    document.getElementById("api-key-input").value = savedKey;
-    document.getElementById("key-status").style.display = "block";
-    document.getElementById("key-status").textContent = "✓ API key guardada — listo para analizar";
-    hideWarn();
-  } else {
-    showWarn();
-  }
+function init(){
+  const s1=document.getElementById("team1-select"),s2=document.getElementById("team2-select");
+  ALL_TEAMS.forEach(t=>{s1.appendChild(new Option(t,t));s2.appendChild(new Option(t,t));});
+  s1.value="Argentina";s2.value="Croacia";
+  updateLabels();
+  try{state.saved=JSON.parse(localStorage.getItem("saved_picks")||"[]");}catch(e){}
+  try{state.parlay=JSON.parse(localStorage.getItem("parlay_picks")||"[]");}catch(e){}
+  updateCartera();updateParlay();
+  const k=localStorage.getItem("groq_key");
+  if(k){document.getElementById("api-key-input").value=k;document.getElementById("key-status").style.display="block";document.getElementById("key-status").textContent="✓ API key guardada";hideWarn();}
+  else showWarn();
 }
 
-// ── Tabs ──────────────────────────────────────────────────────────────────────
-function switchTab(tab) {
-  ["analisis","picks","cartera","config"].forEach(t => {
-    document.getElementById(`tab-${t}`).style.display = t === tab ? "block" : "none";
-    document.getElementById(`btn-${t}`).classList.toggle("active", t === tab);
-  });
-  state.tab = tab;
+function updateLabels(){
+  const t1=document.getElementById("team1-select").value,t2=document.getElementById("team2-select").value;
+  document.getElementById("lbl-t1").textContent=t1.split(" ")[0];
+  document.getElementById("lbl-t2").textContent=t2.split(" ")[0];
 }
 
-// ── Team change ───────────────────────────────────────────────────────────────
-function onTeamChange() {
-  state.data1 = null; state.data2 = null; state.done = false; state.match = null;
-  document.getElementById("team-cards").style.display = "none";
-  document.getElementById("analysis-results").style.display = "none";
-  document.getElementById("idle-state").style.display = "block";
-  document.getElementById("result-pills").style.display = "none";
+function switchTab(tab){
+  ["analisis","picks","valor","parlay","cartera","config"].forEach(t=>{
+    document.getElementById("tab-"+t).style.display=t===tab?"block":"none";
+    document.getElementById("btn-"+t)?.classList.toggle("active",t===tab);
+  });
+  state.tab=tab;
 }
 
-// ── API ───────────────────────────────────────────────────────────────────────
-async function fetchTeam(teamName) {
-  if (state.cache[teamName]) return state.cache[teamName];
+function onTeamChange(){
+  state.data1=null;state.data2=null;state.done=false;state.match=null;
+  document.getElementById("team-cards").style.display="none";
+  document.getElementById("analysis-results").style.display="none";
+  document.getElementById("idle-state").style.display="block";
+  document.getElementById("result-pills").style.display="none";
+  updateLabels();
+}
 
-  const key = localStorage.getItem("groq_key") || localStorage.getItem("gemini_key");
-  if (!key) throw new Error("Falta la API key. Ve a ⚙️ Config y guárdala.");
+async function fetchTeam(teamName){
+  if(state.cache[teamName])return state.cache[teamName];
+  const key=localStorage.getItem("groq_key");
+  if(!key)throw new Error("Sin API key");
+  const injuries1=document.getElementById("injuries1").value;
+  const injuries2=document.getElementById("injuries2").value;
+  const isT1=teamName===document.getElementById("team1-select").value;
+  const injuriesNote=isT1&&injuries1?` Key absences: ${injuries1}.`:!isT1&&injuries2?` Key absences: ${injuries2}.`:"";
 
-  const prompt = `You are a football statistics expert. Provide REAL statistics for the ${teamName} national football team based on their 2024 and 2025 international matches. Use your knowledge of recent tournaments: World Cup 2026 qualifiers, Copa América 2024, Euro 2024, AFCON 2025, Nations League, and friendlies 2024-2025.
-Return ONLY a valid JSON object, no markdown, no explanation:
-{"rank":<FIFA ranking integer>,"form":<avg points per game 0.0-3.0>,"gs":<avg goals scored per match>,"gc":<avg goals conceded per match>,"corners":<avg corners per match>,"yellows":<avg yellow cards per match>,"reds":<avg red cards per match>,"att":<attack strength 0-100>,"def":<defense strength 0-100>,"confederation":"UEFA or CONMEBOL or CONCACAF or AFC or CAF or OFC","last5":["W 2-0 vs X","D 1-1 vs Y","L 0-1 vs Z","W 1-0 vs A","W 3-1 vs B"],"keyPlayers":["Player1","Player2","Player3"],"notes":"one sentence about current form"}`;
+  const prompt=`You are a football statistics expert. Provide statistics for the ${teamName} national team based on 2023-2024 international matches including World Cup qualifiers, continental tournaments, and friendlies.${injuriesNote}
+Return ONLY valid JSON, no markdown:
+{"rank":<FIFA rank>,"form":<avg pts/game 0-3>,"gs":<avg goals scored>,"gc":<avg goals conceded>,"corners":<avg corners>,"yellows":<avg yellows>,"reds":<avg reds>,"att":<attack 0-100>,"def":<defense 0-100>,"confederation":"UEFA|CONMEBOL|CONCACAF|AFC|CAF|OFC","last5":["W 2-0 vs X","D 1-1 vs Y","L 0-1 vs Z","W 1-0 vs A","W 3-1 vs B"],"keyPlayers":["P1","P2","P3"],"h2hAdvantage":<vs opponent advantage -10 to 10>,"firstHalfGoals":<avg goals 1st half>,"secondHalfGoals":<avg goals 2nd half>,"notes":"current form summary"}`;
 
-  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${key}`,
-    },
-    body: JSON.stringify({
-      model: "llama-3.3-70b-versatile",
-      temperature: 0.2,
-      max_tokens: 800,
-      messages: [{ role: "user", content: prompt }],
-    }),
+  const res=await fetch("https://api.groq.com/openai/v1/chat/completions",{
+    method:"POST",
+    headers:{"Content-Type":"application/json","Authorization":`Bearer ${key}`},
+    body:JSON.stringify({model:"llama-3.3-70b-versatile",temperature:0.2,max_tokens:900,messages:[{role:"user",content:prompt}]}),
   });
-
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err?.error?.message || `Error ${res.status}`);
-  }
-
-  const data = await res.json();
-  const text = data.choices?.[0]?.message?.content || "";
-  const match = text.match(/\{[\s\S]*\}/);
-  if (!match) throw new Error("Respuesta inesperada");
-  const parsed = JSON.parse(match[0]);
-  state.cache[teamName] = parsed;
+  if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e?.error?.message||`Error ${res.status}`);}
+  const data=await res.json();
+  const text=data.choices?.[0]?.message?.content||"";
+  const m=text.match(/\{[\s\S]*\}/);
+  if(!m)throw new Error("Respuesta inválida");
+  const parsed=JSON.parse(m[0]);
+  state.cache[teamName]=parsed;
   return parsed;
 }
 
-// ── Analyze ───────────────────────────────────────────────────────────────────
-async function analyze() {
-
-  const t1 = document.getElementById("team1-select").value;
-  const t2 = document.getElementById("team2-select").value;
-  if (t1 === t2) { alert("Selecciona dos equipos distintos"); return; }
-
-  state.done = false; state.match = null;
-  document.getElementById("idle-state").style.display = "none";
-  document.getElementById("analysis-results").style.display = "none";
-  document.getElementById("result-pills").style.display = "none";
-  document.getElementById("team-cards").style.display = "flex";
-  document.getElementById("team-cards").style.flexWrap = "wrap";
-  document.getElementById("analyze-btn").disabled = true;
-  document.getElementById("analyze-btn").textContent = "⟳ BUSCANDO...";
-
-  renderTeamCard("card1", t1, null, true, null, "#448aff");
-  renderTeamCard("card2", t2, null, true, null, "#ffc107");
-
-  try {
-    const [d1, d2] = await Promise.all([
-      fetchTeam(t1).catch(e => { renderTeamCard("card1", t1, null, false, e.message, "#448aff"); return null; }),
-      fetchTeam(t2).catch(e => { renderTeamCard("card2", t2, null, false, e.message, "#ffc107"); return null; }),
+async function analyze(){
+  const key=localStorage.getItem("groq_key");
+  if(!key){showWarn();switchTab("config");return;}
+  const t1=document.getElementById("team1-select").value,t2=document.getElementById("team2-select").value;
+  if(t1===t2){alert("Selecciona dos equipos distintos");return;}
+  state.done=false;state.match=null;
+  document.getElementById("idle-state").style.display="none";
+  document.getElementById("analysis-results").style.display="none";
+  document.getElementById("result-pills").style.display="none";
+  document.getElementById("team-cards").style.display="flex";
+  document.getElementById("analyze-btn").disabled=true;
+  document.getElementById("analyze-btn").textContent="⟳ ANALIZANDO...";
+  renderTeamCard("card1",t1,null,true,null,"#448aff");
+  renderTeamCard("card2",t2,null,true,null,"#ffc107");
+  try{
+    const[d1,d2]=await Promise.all([
+      fetchTeam(t1).catch(e=>{renderTeamCard("card1",t1,null,false,e.message,"#448aff");return null;}),
+      fetchTeam(t2).catch(e=>{renderTeamCard("card2",t2,null,false,e.message,"#ffc107");return null;}),
     ]);
-
-    if (d1) { state.data1 = d1; renderTeamCard("card1", t1, d1, false, null, "#448aff"); }
-    if (d2) { state.data2 = d2; renderTeamCard("card2", t2, d2, false, null, "#ffc107"); }
-
-    if (d1 && d2) {
-      state.match = calcMatch(d1, d2, t1, t2);
-      state.picks = buildPicks(state.match, t1, t2);
-      state.done = true;
-      renderResultPills(state.match, t1, t2);
-      renderAnalysis(state.match, d1, d2, t1, t2);
-      renderPicksTab(state.match, state.picks, t1, t2);
+    if(d1){state.data1=d1;renderTeamCard("card1",t1,d1,false,null,"#448aff");}
+    if(d2){state.data2=d2;renderTeamCard("card2",t2,d2,false,null,"#ffc107");}
+    if(d1&&d2){
+      state.match=calcMatch(d1,d2,t1,t2);
+      state.picks=buildPicks(state.match,t1,t2,d1,d2);
+      state.done=true;
+      renderResultPills(state.match,t1,t2);
+      renderAnalysis(state.match,d1,d2,t1,t2);
+      renderPicksTab(state.match,state.picks,t1,t2,d1,d2);
+      renderValorTab();
     }
-  } finally {
-    document.getElementById("analyze-btn").disabled = false;
-    document.getElementById("analyze-btn").textContent = "🔍 ANALIZAR";
+  }finally{
+    document.getElementById("analyze-btn").disabled=false;
+    document.getElementById("analyze-btn").textContent="🔍 ANALIZAR";
   }
 }
 
-// ── Render team card ──────────────────────────────────────────────────────────
-function renderTeamCard(id, name, data, loading, error, color) {
-  const el = document.getElementById(id);
-  if (loading) {
-    el.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:${color};letter-spacing:2px">${name}</span>
-        <span style="font-size:10px;color:#546e7a">⟳ buscando…</span>
-      </div>
-      <div style="text-align:center;padding:20px 0">
-        <div class="loader spin" style="border-color:${color}44;border-top-color:${color}"></div>
-        <div style="font-size:11px;color:#546e7a">Buscando datos 2024–2025…</div>
-      </div>`;
-    return;
-  }
-  if (error) {
-    el.innerHTML = `
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:${color};letter-spacing:2px;margin-bottom:10px">${name}</div>
-      <div style="color:#ff5252;font-size:12px;background:#ff525211;border-radius:8px;padding:10px">${error}</div>`;
-    return;
-  }
-  const last5html = (data.last5||[]).map(r => {
-    const w=r.startsWith("W"),l=r.startsWith("L");
-    const c=w?"#00e676":l?"#ff5252":"#ffc107";
-    return `<span class="tag" style="background:${c}22;color:${c};border:1px solid ${c}44">${r}</span>`;
-  }).join("");
-  const playershtml = (data.keyPlayers||[]).map(p =>
-    `<span class="tag" style="background:#0b0f1a;color:#eceff1;border:1px solid #1e2d45">⭐ ${p}</span>`
-  ).join("");
-  el.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <span style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:${color};letter-spacing:2px">${name}</span>
-      <span class="tag" style="background:#00e67622;color:#00e676;border:1px solid #00e67644;font-size:9px">LIVE ✓</span>
+function renderTeamCard(id,name,data,loading,error,color){
+  const el=document.getElementById(id);
+  if(loading){el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span style="font-family:'Bebas Neue',sans-serif;font-size:17px;color:${color};letter-spacing:2px">${name}</span><span style="font-size:10px;color:#546e7a">⟳ buscando…</span></div><div style="text-align:center;padding:16px 0"><div class="loader spin" style="border-color:${color}44;border-top-color:${color}"></div><div style="font-size:11px;color:#546e7a">Buscando estadísticas…</div></div>`;return;}
+  if(error){el.innerHTML=`<div style="font-family:'Bebas Neue',sans-serif;font-size:17px;color:${color};letter-spacing:2px;margin-bottom:8px">${name}</div><div style="color:#ff5252;font-size:11px;background:#ff525211;border-radius:8px;padding:9px">${error}</div>`;return;}
+  const last5=(data.last5||[]).map(r=>{const w=r.startsWith("W"),l=r.startsWith("L"),c=w?C.green:l?C.red:C.yellow;return`<span class="tag" style="background:${c}22;color:${c};border:1px solid ${c}44">${r}</span>`;}).join("");
+  const players=(data.keyPlayers||[]).map(p=>`<span class="tag" style="background:#0b0f1a;color:#eceff1;border:1px solid #1e2d45">⭐ ${p}</span>`).join("");
+  el.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:17px;color:${color};letter-spacing:2px">${name}</span>
+      <span class="tag" style="background:#00e67622;color:#00e676;border:1px solid #00e67644;font-size:9px">DATOS ✓</span>
     </div>
-    <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+    <div style="display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap">
       <div class="stat-box" style="border:1px solid ${color}33"><div class="stat-val" style="color:${color}">#${data.rank}</div><div class="stat-lbl">FIFA</div></div>
-      <div class="stat-box" style="border:1px solid #00e67633"><div class="stat-val" style="color:#00e676">${data.gs}</div><div class="stat-lbl">Goles/PJ</div></div>
-      <div class="stat-box" style="border:1px solid #ff525233"><div class="stat-val" style="color:#ff5252">${data.gc}</div><div class="stat-lbl">GC/PJ</div></div>
-      <div class="stat-box" style="border:1px solid #e040fb33"><div class="stat-val" style="color:#e040fb">${data.form}</div><div class="stat-lbl">Forma</div><div class="stat-sub" style="color:#e040fb99">/3 pts</div></div>
+      <div class="stat-box" style="border:1px solid ${C.green}33"><div class="stat-val" style="color:${C.green}">${data.gs}</div><div class="stat-lbl">G/PJ</div></div>
+      <div class="stat-box" style="border:1px solid ${C.red}33"><div class="stat-val" style="color:${C.red}">${data.gc}</div><div class="stat-lbl">GC/PJ</div></div>
+      <div class="stat-box" style="border:1px solid ${C.purple}33"><div class="stat-val" style="color:${C.purple}">${data.form}</div><div class="stat-lbl">Forma</div><div class="stat-sub" style="color:${C.purple}99">/3pts</div></div>
     </div>
-    <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
-      <div class="stat-box" style="border:1px solid #ffc10733"><div class="stat-val" style="color:#ffc107">${data.corners}</div><div class="stat-lbl">Corners</div><div class="stat-sub" style="color:#ffc10799">/PJ</div></div>
-      <div class="stat-box" style="border:1px solid #ffc10733"><div class="stat-val" style="color:#ffc107">${data.yellows}</div><div class="stat-lbl">Amarillas</div><div class="stat-sub" style="color:#ffc10799">/PJ</div></div>
-      <div class="stat-box" style="border:1px solid #ff525233"><div class="stat-val" style="color:#ff5252">${data.reds}</div><div class="stat-lbl">Rojas</div><div class="stat-sub" style="color:#ff525299">/PJ</div></div>
+    <div style="display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap">
+      <div class="stat-box" style="border:1px solid ${C.yellow}33"><div class="stat-val" style="color:${C.yellow}">${data.corners}</div><div class="stat-lbl">Corners</div></div>
+      <div class="stat-box" style="border:1px solid ${C.yellow}33"><div class="stat-val" style="color:${C.yellow}">${data.yellows}</div><div class="stat-lbl">Amar.</div></div>
+      <div class="stat-box" style="border:1px solid ${C.red}33"><div class="stat-val" style="color:${C.red}">${data.reds||0}</div><div class="stat-lbl">Rojas</div></div>
+      <div class="stat-box" style="border:1px solid ${C.blue}33"><div class="stat-val" style="color:${C.blue}">${data.firstHalfGoals||"?"}</div><div class="stat-lbl">G 1T</div></div>
     </div>
-    ${last5html ? `<div style="margin-bottom:10px"><div style="font-size:9px;color:#546e7a;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px">ÚLTIMOS 5</div><div style="display:flex;gap:4px;flex-wrap:wrap">${last5html}</div></div>` : ""}
-    ${playershtml ? `<div style="margin-bottom:10px"><div style="font-size:9px;color:#546e7a;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px">JUGADORES CLAVE</div><div style="display:flex;gap:4px;flex-wrap:wrap">${playershtml}</div></div>` : ""}
-    ${data.notes ? `<div style="font-size:11px;color:#546e7a;background:#0b0f1a;border-radius:7px;padding:7px 9px;border-left:3px solid ${color};font-style:italic">${data.notes}</div>` : ""}`;
+    ${last5?`<div style="margin-bottom:8px"><div style="font-size:9px;color:#546e7a;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">ÚLTIMOS 5</div><div style="display:flex;gap:3px;flex-wrap:wrap">${last5}</div></div>`:""}
+    ${players?`<div style="margin-bottom:8px"><div style="font-size:9px;color:#546e7a;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">CLAVE</div><div style="display:flex;gap:3px;flex-wrap:wrap">${players}</div></div>`:""}
+    ${data.notes?`<div style="font-size:10px;color:#546e7a;background:#0b0f1a;border-radius:7px;padding:6px 8px;border-left:3px solid ${color};font-style:italic">${data.notes}</div>`:""}`;
 }
 
-// ── Result pills ──────────────────────────────────────────────────────────────
-function renderResultPills(m, t1, t2) {
-  const el = document.getElementById("result-pills");
-  el.style.display = "flex";
-  el.innerHTML = [
-    {label:t1,val:m.w1,color:"#448aff"},
-    {label:"EMPATE",val:m.dr,color:"#ffc107"},
-    {label:t2,val:m.w2,color:"#ff5252"},
-  ].map(({label,val,color}) => `
-    <div class="result-pill" style="background:${color}18;border:1px solid ${color}55">
-      <div class="result-pct" style="color:${color}">${val}%</div>
-      <div class="result-lbl">${label}</div>
-    </div>`).join("");
+function renderResultPills(m,t1,t2){
+  const el=document.getElementById("result-pills");
+  el.style.display="flex";
+  el.innerHTML=[{label:t1,val:m.w1,color:C.blue},{label:"EMPATE",val:m.dr,color:C.yellow},{label:t2,val:m.w2,color:C.red}].map(({label,val,color})=>`<div style="text-align:center;background:${color}18;border:1px solid ${color}55;border-radius:8px;padding:7px 12px;flex:1"><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:${color}">${val}%</div><div style="font-size:9px;color:#546e7a">${label}</div></div>`).join("");
 }
 
-// ── Analysis panels ───────────────────────────────────────────────────────────
-function renderAnalysis(m, d1, d2, t1, t2) {
-  const el = document.getElementById("analysis-results");
-  el.style.display = "block";
-  el.className = "fade";
-
-  function gauge(val, label, color) {
-    return `<div style="margin-bottom:8px">
-      <div style="display:flex;justify-content:space-between;font-size:11px;color:#546e7a;margin-bottom:3px">
-        <span>${label}</span><span style="color:${color};font-weight:700">${val}%</span>
-      </div>
-      <div class="gauge-track"><div class="gauge-fill" style="width:${Math.min(100,+val)}%;background:${color}"></div></div>
-    </div>`;
-  }
-
-  function compareRow(label, v1, v2, invert) {
-    const mx = Math.max(+v1||1, +v2||1);
-    const p1 = invert ? (1-(+v1-1)/mx)*100 : (+v1/mx)*100;
-    const p2 = invert ? (1-(+v2-1)/mx)*100 : (+v2/mx)*100;
-    return `<div style="margin-bottom:11px">
-      <div style="font-size:10px;color:#546e7a;margin-bottom:3px">${label}</div>
-      <div style="display:flex;gap:5px;align-items:center">
-        <span style="font-size:11px;color:#448aff;width:28px;text-align:right">${v1}</span>
-        <div style="flex:1;display:flex;gap:2px">
-          <div class="compare-bar" style="flex:1;border-radius:3px 0 0 3px"><div style="height:100%;width:${Math.min(100,p1)}%;background:#448aff;float:right;border-radius:3px 0 0 3px"></div></div>
-          <div class="compare-bar" style="flex:1;border-radius:0 3px 3px 0"><div style="height:100%;width:${Math.min(100,p2)}%;background:#ff5252;border-radius:0 3px 3px 0"></div></div>
-        </div>
-        <span style="font-size:11px;color:#ff5252;width:28px">${v2}</span>
-      </div>
-    </div>`;
-  }
-
-  el.innerHTML = `
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:14px">
-
-      <div class="card">
-        <div class="section-title" style="font-size:16px;color:#00e676">⚽ GOLES ESPERADOS</div>
-        <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
-          <div class="stat-box" style="border:1px solid #448aff33"><div class="stat-val" style="color:#448aff">${m.xg1}</div><div class="stat-lbl">XG ${t1.split(" ")[0]}</div></div>
-          <div class="stat-box" style="border:1px solid #ff525233"><div class="stat-val" style="color:#ff5252">${m.xg2}</div><div class="stat-lbl">XG ${t2.split(" ")[0]}</div></div>
-          <div class="stat-box" style="border:1px solid #00e67633"><div class="stat-val" style="color:#00e676">${m.total}</div><div class="stat-lbl">XG Total</div></div>
-        </div>
-        ${gauge(m.o15,"Over 1.5 goles","#00e676")}
-        ${gauge(m.o25,"Over 2.5 goles","#ffc107")}
-        ${gauge(m.o35,"Over 3.5 goles","#ff5252")}
-        ${gauge(m.btts,"BTTS (ambos marcan)","#e040fb")}
-      </div>
-
-      <div class="card">
-        <div class="section-title" style="font-size:16px;color:#ffc107">⛳ CORNERS</div>
-        <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
-          <div class="stat-box" style="border:1px solid #448aff33"><div class="stat-val" style="color:#448aff">${d1.corners}</div><div class="stat-lbl">${t1.split(" ")[0]}</div><div class="stat-sub" style="color:#448aff99">/PJ</div></div>
-          <div class="stat-box" style="border:1px solid #ff525233"><div class="stat-val" style="color:#ff5252">${d2.corners}</div><div class="stat-lbl">${t2.split(" ")[0]}</div><div class="stat-sub" style="color:#ff525299">/PJ</div></div>
-          <div class="stat-box" style="border:1px solid #ffc10733"><div class="stat-val" style="color:#ffc107">${m.avgC}</div><div class="stat-lbl">Total est.</div></div>
-        </div>
-        ${gauge(m.cO85,"Over 8.5 corners","#ffc107")}
-        ${gauge(m.cO105,"Over 10.5 corners","#ff5252")}
-        <div style="margin-top:10px;padding:7px 9px;background:#0b0f1a;border-radius:7px;font-size:11px;color:#546e7a;border-left:3px solid #ffc107">
-          ${+m.avgC>9.5 ? "Ambos buscan el área — alto volumen esperado" : "Equipos más directos, menos corners esperados"}
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="section-title" style="font-size:16px;color:#ff5252">🟨 TARJETAS</div>
-        <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
-          <div class="stat-box" style="border:1px solid #ffc10733"><div class="stat-val" style="color:#ffc107">${d1.yellows}</div><div class="stat-lbl">${t1.split(" ")[0]}</div><div class="stat-sub" style="color:#ffc10799">amar/PJ</div></div>
-          <div class="stat-box" style="border:1px solid #ffc10733"><div class="stat-val" style="color:#ffc107">${d2.yellows}</div><div class="stat-lbl">${t2.split(" ")[0]}</div><div class="stat-sub" style="color:#ffc10799">amar/PJ</div></div>
-          <div class="stat-box" style="border:1px solid #ff525233"><div class="stat-val" style="color:#ff5252">${m.avgR}</div><div class="stat-lbl">Rojas est.</div></div>
-        </div>
-        ${gauge(m.yO35,"Over 3.5 amarillas","#ffc107")}
-        ${gauge(m.yO45,"Over 4.5 amarillas","#ff5252")}
-        <div style="margin-top:10px;padding:7px 9px;background:#0b0f1a;border-radius:7px;font-size:11px;color:#546e7a;border-left:3px solid #ff5252">
-          Total estimado: ${m.avgY} amarillas · ${+m.avgY>=4?"Partido físico/tenso":"Disciplina razonable"}
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="section-title" style="font-size:16px;color:#e040fb">📋 COMPARATIVA</div>
-        ${compareRow("FIFA Ranking", d1.rank, d2.rank, true)}
-        ${compareRow("Ataque (0-100)", d1.att, d2.att, false)}
-        ${compareRow("Defensa (0-100)", d1.def, d2.def, false)}
-        ${compareRow("Forma (pts/PJ)", d1.form, d2.form, false)}
-        <div style="margin-top:8px;display:flex;justify-content:space-between;font-size:11px">
-          <span style="color:#448aff;font-weight:700">${t1}</span>
-          <span style="color:#ff5252;font-weight:700">${t2}</span>
-        </div>
-      </div>
-    </div>`;
+function gauge(val,label,color){
+  return`<div style="margin-bottom:7px"><div style="display:flex;justify-content:space-between;font-size:10px;color:#546e7a;margin-bottom:3px"><span>${label}</span><span style="color:${color};font-weight:700">${val}%</span></div><div class="gauge-track"><div class="gauge-fill" style="width:${Math.min(100,+val)}%;background:${color}"></div></div></div>`;
 }
 
-// ── Picks tab ─────────────────────────────────────────────────────────────────
-function renderPicksTab(m, picks, t1, t2) {
-  document.getElementById("picks-match-label").textContent = `${t1} vs ${t2} · Datos reales 2024–2025`;
-  const catColor = {resultado:"#448aff",goles:"#00e676",corners:"#ffc107",tarjetas:"#ff5252"};
-
-  document.getElementById("picks-list").innerHTML = picks.map((p,i) => {
-    const cl = p.conf>=72?"#00e676":p.conf>=56?"#ffc107":"#ff5252";
-    return `<div class="pick-row" style="background:${cl}0d;border:1px solid ${cl}33">
-      <div style="flex:1">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-          <span class="pick-name">✦ ${p.pick}</span>
-          <span class="pick-conf" style="color:${cl};background:${cl}22">${Math.round(p.conf)}%</span>
-        </div>
-        <div class="pick-rat">${p.rationale}</div>
-      </div>
-      <button class="save-btn" onclick="savePick(${i})" style="background:${cl}22;border:1px solid ${cl};color:${cl}">+</button>
-    </div>`;
-  }).join("");
-
-  const cats = [...new Set(picks.map(p=>p.cat))];
-  document.getElementById("picks-cats").innerHTML = cats.map(c =>
-    `<span class="tag" style="background:${catColor[c]}22;border:1px solid ${catColor[c]}44;color:${catColor[c]}">${c.toUpperCase()}</span>`
-  ).join("");
-
-  document.getElementById("picks-content").style.display = "block";
-  document.getElementById("picks-empty").style.display = "none";
+function compareRow(label,v1,v2,invert){
+  const mx=Math.max(+v1||1,+v2||1);
+  const p1=invert?(1-(+v1-1)/mx)*100:(+v1/mx)*100;
+  const p2=invert?(1-(+v2-1)/mx)*100:(+v2/mx)*100;
+  return`<div style="margin-bottom:10px"><div style="font-size:9px;color:#546e7a;margin-bottom:3px">${label}</div><div style="display:flex;gap:4px;align-items:center"><span style="font-size:10px;color:#448aff;width:28px;text-align:right">${v1}</span><div style="flex:1;display:flex;gap:1px"><div style="flex:1;background:#0b0f1a;border-radius:3px 0 0 3px;height:7px;overflow:hidden"><div style="height:100%;width:${Math.min(100,p1)}%;background:#448aff;float:right;border-radius:3px 0 0 3px"></div></div><div style="flex:1;background:#0b0f1a;border-radius:0 3px 3px 0;height:7px;overflow:hidden"><div style="height:100%;width:${Math.min(100,p2)}%;background:#ff5252;border-radius:0 3px 3px 0"></div></div></div><span style="font-size:10px;color:#ff5252;width:28px">${v2}</span></div></div>`;
 }
 
-function savePick(i) {
-  const p = state.picks[i];
-  const t1 = document.getElementById("team1-select").value;
-  const t2 = document.getElementById("team2-select").value;
-  state.saved.push({ ...p, conf: Math.round(p.conf), match: `${t1} vs ${t2}`, id: Date.now() });
-  localStorage.setItem("saved_picks", JSON.stringify(state.saved));
-  updateCartera();
-  document.getElementById("cartera-count").textContent = state.saved.length;
+function renderAnalysis(m,d1,d2,t1,t2){
+  const el=document.getElementById("analysis-results");
+  el.style.display="block";
+  const venue=document.getElementById("venue").value;
+  const weather=document.getElementById("weather").value;
+  const referee=document.getElementById("referee").value;
+  const weatherNote=weather==="calor"?"⚠️ Calor extremo — menos goles en 2T, más sustituciones":weather==="lluvia"?"🌧 Lluvia — más errores, menos corners":weather==="altitud"?"⛰ Alta altitud — equipos visitantes se fatigan más":"";
+
+  el.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px">
+
+  <div class="card">
+    <div class="section-title" style="font-size:15px;color:${C.green}">⚽ GOLES ESPERADOS</div>
+    <div style="display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap">
+      <div class="stat-box" style="border:1px solid ${C.blue}33"><div class="stat-val" style="color:${C.blue}">${m.xg1}</div><div class="stat-lbl">XG ${t1.split(" ")[0]}</div></div>
+      <div class="stat-box" style="border:1px solid ${C.red}33"><div class="stat-val" style="color:${C.red}">${m.xg2}</div><div class="stat-lbl">XG ${t2.split(" ")[0]}</div></div>
+      <div class="stat-box" style="border:1px solid ${C.green}33"><div class="stat-val" style="color:${C.green}">${m.total}</div><div class="stat-lbl">XG Total</div></div>
+    </div>
+    ${gauge(m.o15,"Over 1.5 goles",C.green)}
+    ${gauge(m.o25,"Over 2.5 goles",C.yellow)}
+    ${gauge(m.o35,"Over 3.5 goles",C.red)}
+    ${gauge(m.btts,"BTTS (ambos marcan)",C.purple)}
+    <div style="margin-top:8px;display:flex;gap:5px">
+      <div class="stat-box" style="border:1px solid ${C.blue}33"><div class="stat-val" style="color:${C.blue};font-size:15px">${m.xg1H}</div><div class="stat-lbl">XG 1T ${t1.split(" ")[0]}</div></div>
+      <div class="stat-box" style="border:1px solid ${C.red}33"><div class="stat-val" style="color:${C.red};font-size:15px">${m.xg2H}</div><div class="stat-lbl">XG 1T ${t2.split(" ")[0]}</div></div>
+      <div class="stat-box" style="border:1px solid ${C.yellow}33"><div class="stat-val" style="color:${C.yellow};font-size:15px">${m.o25H}</div><div class="stat-lbl">O1.5 1T %</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title" style="font-size:15px;color:${C.yellow}">⛳ CORNERS</div>
+    <div style="display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap">
+      <div class="stat-box" style="border:1px solid ${C.blue}33"><div class="stat-val" style="color:${C.blue}">${d1.corners}</div><div class="stat-lbl">${t1.split(" ")[0]}</div><div class="stat-sub" style="color:${C.blue}99">/PJ</div></div>
+      <div class="stat-box" style="border:1px solid ${C.red}33"><div class="stat-val" style="color:${C.red}">${d2.corners}</div><div class="stat-lbl">${t2.split(" ")[0]}</div><div class="stat-sub" style="color:${C.red}99">/PJ</div></div>
+      <div class="stat-box" style="border:1px solid ${C.yellow}33"><div class="stat-val" style="color:${C.yellow}">${m.avgC}</div><div class="stat-lbl">Total est.</div></div>
+    </div>
+    ${gauge(m.cO85,"Over 8.5 corners",C.yellow)}
+    ${gauge(m.cO95,"Over 9.5 corners",C.yellow)}
+    ${gauge(m.cO105,"Over 10.5 corners",C.red)}
+    <div style="margin-top:8px;padding:7px 9px;background:#0b0f1a;border-radius:7px;font-size:10px;color:#546e7a;border-left:3px solid ${C.yellow}">
+      ${+m.avgC>9.5?"Ambos equipos atacan con amplitud — alto volumen esperado":"Juego más directo y vertical — menos corners"}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title" style="font-size:15px;color:${C.red}">🟨 TARJETAS</div>
+    <div style="display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap">
+      <div class="stat-box" style="border:1px solid ${C.yellow}33"><div class="stat-val" style="color:${C.yellow}">${d1.yellows}</div><div class="stat-lbl">${t1.split(" ")[0]}</div><div class="stat-sub" style="color:${C.yellow}99">amar/PJ</div></div>
+      <div class="stat-box" style="border:1px solid ${C.yellow}33"><div class="stat-val" style="color:${C.yellow}">${d2.yellows}</div><div class="stat-lbl">${t2.split(" ")[0]}</div><div class="stat-sub" style="color:${C.yellow}99">amar/PJ</div></div>
+      <div class="stat-box" style="border:1px solid ${C.red}33"><div class="stat-val" style="color:${C.red}">${m.avgR}</div><div class="stat-lbl">Rojas est.</div></div>
+    </div>
+    ${gauge(m.yO25,"Over 2.5 amarillas",C.yellow)}
+    ${gauge(m.yO35,"Over 3.5 amarillas",C.yellow)}
+    ${gauge(m.yO45,"Over 4.5 amarillas",C.red)}
+    <div style="margin-top:8px;padding:7px 9px;background:#0b0f1a;border-radius:7px;font-size:10px;color:#546e7a;border-left:3px solid ${C.red}">
+      Total: ${m.avgY} amar. estimadas · ${+m.avgY>=4?"Partido físico":"Juego relativamente limpio"}
+      ${referee?`<br>⚖️ Árbitro: <strong style="color:#eceff1">${referee}</strong> — considera su historial de tarjetas`:""}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title" style="font-size:15px;color:${C.purple}">📋 COMPARATIVA</div>
+    ${compareRow("FIFA Ranking",d1.rank,d2.rank,true)}
+    ${compareRow("Ataque (0-100)",d1.att,d2.att,false)}
+    ${compareRow("Defensa (0-100)",d1.def,d2.def,false)}
+    ${compareRow("Forma (pts/PJ)",d1.form,d2.form,false)}
+    ${compareRow("Goles/PJ",d1.gs,d2.gs,false)}
+    <div style="margin-top:8px;display:flex;justify-content:space-between;font-size:10px">
+      <span style="color:${C.blue};font-weight:700">${t1}</span>
+      <span style="color:${C.red};font-weight:700">${t2}</span>
+    </div>
+  </div>
+
+  ${venue||weather!=="normal"||referee?`<div class="card" style="grid-column:1/-1">
+    <div class="section-title" style="font-size:15px;color:#00e676">🏟️ FACTORES EXTERNOS</div>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      ${venue?`<div style="background:#0b0f1a;border-radius:8px;padding:9px 11px;font-size:11px;color:#eceff1;border-left:3px solid ${C.green}">🏟️ Sede: <strong>${venue}</strong></div>`:""}
+      ${weatherNote?`<div style="background:#0b0f1a;border-radius:8px;padding:9px 11px;font-size:11px;color:#eceff1;border-left:3px solid ${C.yellow}">${weatherNote}</div>`:""}
+      ${referee?`<div style="background:#0b0f1a;border-radius:8px;padding:9px 11px;font-size:11px;color:#eceff1;border-left:3px solid ${C.red}">⚖️ Árbitro: <strong>${referee}</strong> — revisa su promedio de tarjetas por partido</div>`:""}
+    </div>
+  </div>`:""}
+
+  </div>`;
 }
 
-function updateCartera() {
-  const count = state.saved.length;
-  document.getElementById("cartera-count").textContent = count;
-  document.getElementById("cartera-sub").textContent = `${count} picks guardados`;
-  const catColor = {resultado:"#448aff",goles:"#00e676",corners:"#ffc107",tarjetas:"#ff5252"};
-
-  if (count === 0) {
-    document.getElementById("cartera-list").innerHTML = "";
-    document.getElementById("cartera-empty").style.display = "block";
-    document.getElementById("cartera-summary").style.display = "none";
-  } else {
-    document.getElementById("cartera-empty").style.display = "none";
-    document.getElementById("cartera-list").innerHTML = state.saved.map((p,i) => {
-      const cl = p.conf>=70?"#00e676":p.conf>=55?"#ffc107":"#ff5252";
-      return `<div style="background:#0b0f1a;border:1px solid #1e2d45;border-radius:10px;padding:12px 13px;margin-bottom:9px">
-        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
-          <span style="font-size:11px;color:#546e7a">⚽ ${p.match}</span>
-          <div style="display:flex;gap:6px;align-items:center">
-            <span class="tag" style="background:${catColor[p.cat]}22;color:${catColor[p.cat]};border:1px solid ${catColor[p.cat]}44">${p.cat}</span>
-            <button onclick="removePick(${i})" style="background:none;border:none;color:#ff5252;cursor:pointer;font-size:14px;padding:0;line-height:1">✕</button>
-          </div>
-        </div>
-        <div style="font-weight:700;font-size:13px;color:#eceff1;margin-bottom:3px">✦ ${p.pick}</div>
-        <div style="font-size:11px;color:#546e7a;margin-bottom:7px">${p.rationale}</div>
-        <span style="font-size:13px;font-weight:700;color:${cl}">${p.conf}% confianza</span>
-      </div>`;
-    }).join("");
-
-    const avg = Math.round(state.saved.reduce((a,b)=>a+b.conf,0)/count);
-    const high = state.saved.filter(p=>p.conf>=70).length;
-    document.getElementById("cartera-summary").style.display = "block";
-    document.getElementById("cartera-summary").textContent = `💡 Alta confianza (≥70%): ${high} picks · Promedio: ${avg}%`;
-  }
-}
-
-function removePick(i) {
-  state.saved.splice(i,1);
-  localStorage.setItem("saved_picks", JSON.stringify(state.saved));
-  updateCartera();
-}
-
-// ── Config ────────────────────────────────────────────────────────────────────
-function saveKey() {
-  const val = document.getElementById("api-key-input").value.trim();
-  if (!val.startsWith("gsk_") && !val.startsWith("AIza") && !val.startsWith("AQ.")) {
-    alert("Key inválida. Debe empezar con gsk_");
-    return;
-  }
-  const storeName = val.startsWith("gsk_") ? "groq_key" : "gemini_key";
-  localStorage.setItem(storeName, val);
-  document.getElementById("key-status").style.display = "block";
-  document.getElementById("key-status").textContent = "✓ API key guardada — ya puedes analizar partidos";
-  hideWarn();
-  setTimeout(() => switchTab("analisis"), 1200);
-}
-
-function toggleKey() {
-  const inp = document.getElementById("api-key-input");
-  inp.type = inp.type === "password" ? "text" : "password";
-  document.getElementById("toggle-btn").textContent = inp.type === "password" ? "👁" : "🙈";
-}
-
-function showWarn() { document.getElementById("no-api-warn").style.display = "block"; }
-function hideWarn() { document.getElementById("no-api-warn").style.display = "none"; }
-
-// ── Math ──────────────────────────────────────────────────────────────────────
-function calcMatch(s1, s2, t1, t2) {
-  const xg1 = Math.max(0.2,(+s1.gs*0.6+(1-+s2.def/100)*+s1.att/55)*0.8);
-  const xg2 = Math.max(0.2,(+s2.gs*0.6+(1-+s1.def/100)*+s2.att/55)*0.8);
-  const total = xg1+xg2;
-  const edge = (+s1.att-+s2.att)*0.4+(+s2.def-+s1.def)*0.4+(+s1.form-+s2.form)*12+(+s2.rank-+s1.rank)*0.12;
-  const w1 = Math.min(0.82,Math.max(0.10,0.40+edge/130));
-  const dr = Math.min(0.35,Math.max(0.12,0.28-Math.abs(edge)/200));
-  const w2 = Math.max(0.08,1-w1-dr);
-  const avgC = +s1.corners + +s2.corners;
-  const avgY = +s1.yellows + +s2.yellows;
-  const avgR = (+s1.reds + +s2.reds)*0.6;
-  const p0=Math.exp(-total), p1=total*Math.exp(-total);
-  const o15=1-p0-p1, o25=o15*(1-Math.exp(-Math.max(0,total-1.5))), o35=o25*0.52;
+function calcMatch(s1,s2,t1,t2){
+  const xg1=Math.max(0.2,(+s1.gs*0.6+(1-+s2.def/100)*+s1.att/55)*0.8);
+  const xg2=Math.max(0.2,(+s2.gs*0.6+(1-+s1.def/100)*+s2.att/55)*0.8);
+  const total=xg1+xg2;
+  const edge=(+s1.att-+s2.att)*0.4+(+s2.def-+s1.def)*0.4+(+s1.form-+s2.form)*12+(+s2.rank-+s1.rank)*0.12;
+  const w1=Math.min(0.82,Math.max(0.10,0.40+edge/130));
+  const dr=Math.min(0.35,Math.max(0.12,0.28-Math.abs(edge)/200));
+  const w2=Math.max(0.08,1-w1-dr);
+  const avgC=+s1.corners+ +s2.corners,avgY=+s1.yellows+ +s2.yellows,avgR=(+s1.reds+ +s2.reds)*0.6;
+  const p0=Math.exp(-total),p1=total*Math.exp(-total);
+  const o15=1-p0-p1,o25=o15*(1-Math.exp(-Math.max(0,total-1.5))),o35=o25*0.52;
   const btts=(1-Math.exp(-xg1))*(1-Math.exp(-xg2));
   const cO85=Math.min(0.82,Math.max(0.28,0.45+(avgC-9)*0.06));
+  const cO95=Math.min(0.75,Math.max(0.22,0.40+(avgC-9.5)*0.06));
   const cO105=Math.min(0.70,Math.max(0.18,0.35+(avgC-10)*0.05));
+  const yO25=Math.min(0.85,Math.max(0.35,0.60+(avgY-3)*0.10));
   const yO35=Math.min(0.78,Math.max(0.22,0.42+(avgY-3.8)*0.10));
   const yO45=Math.min(0.65,Math.max(0.15,0.32+(avgY-4.5)*0.10));
-  return {
-    xg1:xg1.toFixed(2), xg2:xg2.toFixed(2), total:total.toFixed(2),
-    w1:(w1*100).toFixed(1), dr:(dr*100).toFixed(1), w2:(w2*100).toFixed(1),
-    avgC:avgC.toFixed(1), cO85:(cO85*100).toFixed(0), cO105:(cO105*100).toFixed(0),
-    avgY:avgY.toFixed(1), avgR:avgR.toFixed(2),
-    yO35:(yO35*100).toFixed(0), yO45:(yO45*100).toFixed(0),
-    o15:(o15*100).toFixed(1), o25:(o25*100).toFixed(1), o35:(o35*100).toFixed(1),
-    btts:(btts*100).toFixed(1), s1, s2, t1, t2, edge,
+  // First half
+  const fhg1=+s1.firstHalfGoals||xg1*0.42,fhg2=+s2.firstHalfGoals||xg2*0.42;
+  const fhTotal=fhg1+fhg2;
+  const fhO05=1-Math.exp(-fhTotal);
+  const fhO15=fhO05*(1-Math.exp(-Math.max(0,fhTotal-0.5)));
+  // Handicap
+  const hdp=edge>15?-0.5:edge<-15?0.5:0;
+  return{
+    xg1:xg1.toFixed(2),xg2:xg2.toFixed(2),total:total.toFixed(2),
+    w1:(w1*100).toFixed(1),dr:(dr*100).toFixed(1),w2:(w2*100).toFixed(1),
+    avgC:avgC.toFixed(1),cO85:(cO85*100).toFixed(0),cO95:(cO95*100).toFixed(0),cO105:(cO105*100).toFixed(0),
+    avgY:avgY.toFixed(1),avgR:avgR.toFixed(2),
+    yO25:(yO25*100).toFixed(0),yO35:(yO35*100).toFixed(0),yO45:(yO45*100).toFixed(0),
+    o15:(o15*100).toFixed(1),o25:(o25*100).toFixed(1),o35:(o35*100).toFixed(1),btts:(btts*100).toFixed(1),
+    xg1H:fhg1.toFixed(2),xg2H:fhg2.toFixed(2),o25H:(fhO15*100).toFixed(0),
+    fhO05:(fhO05*100).toFixed(0),fhO15:(fhO15*100).toFixed(0),
+    hdp,hdpFav:edge>15?t1:edge<-15?t2:"",
+    s1,s2,t1,t2,edge,
   };
 }
 
-function buildPicks(m, t1, t2) {
-  const list=[], p1=+m.w1, pd=+m.dr, p2=+m.w2, xg=+m.total;
-  if(p1>58) list.push({pick:`Victoria ${t1}`,conf:Math.round(p1),cat:"resultado",rationale:`XG ${m.xg1} vs ${m.xg2}. Superioridad en datos 2024-25.`});
-  else if(p2>58) list.push({pick:`Victoria ${t2}`,conf:Math.round(p2),cat:"resultado",rationale:`Mejor rendimiento reciente en ataque y defensa.`});
-  else list.push({pick:"Empate (X)",conf:Math.round(pd+8),cat:"resultado",rationale:"Equilibrio real entre ambas selecciones."});
-  if(p1>45&&p2<35) list.push({pick:`${t1} no pierde (1X)`,conf:Math.round(p1+pd),cat:"resultado",rationale:"Doble oportunidad segura."});
-  else if(p2>45&&p1<35) list.push({pick:`${t2} no pierde (X2)`,conf:Math.round(p2+pd),cat:"resultado",rationale:"Doble oportunidad segura."});
-  if(xg>2.8) list.push({pick:"Over 2.5 goles",conf:+m.o25,cat:"goles",rationale:`XG total: ${m.total}. Ambos tienen buen ataque en 2024-25.`});
-  else if(xg<2.1) list.push({pick:"Under 2.5 goles",conf:Math.round(100-(+m.o25)),cat:"goles",rationale:"Perfil defensivo sólido en los datos recientes."});
-  if(xg>3.2) list.push({pick:"Over 3.5 goles",conf:+m.o35,cat:"goles",rationale:"XG muy alto — partido muy abierto."});
+function buildPicks(m,t1,t2,d1,d2){
+  const list=[];
+  const p1=+m.w1,pd=+m.dr,p2=+m.w2,xg=+m.total;
+  // Resultado
+  if(p1>55)list.push({pick:`Victoria ${t1}`,conf:Math.round(p1),cat:"resultado",rationale:`XG ${m.xg1} vs ${m.xg2}. Favorito claro por ataque y defensa.`});
+  else if(p2>55)list.push({pick:`Victoria ${t2}`,conf:Math.round(p2),cat:"resultado",rationale:`XG ${m.xg1} vs ${m.xg2}. Mayor calidad en ambos lados.`});
+  else list.push({pick:"Empate (X)",conf:Math.round(pd+8),cat:"resultado",rationale:"Equipos muy igualados. Partido cerrado."});
+  if(p1>48&&p2<32)list.push({pick:`${t1} no pierde (1X)`,conf:Math.round(p1+pd),cat:"resultado",rationale:"Doble oportunidad segura."});
+  else if(p2>48&&p1<32)list.push({pick:`${t2} no pierde (X2)`,conf:Math.round(p2+pd),cat:"resultado",rationale:"Doble oportunidad segura."});
+  // Goles
+  if(xg>2.8)list.push({pick:"Over 2.5 goles",conf:+m.o25,cat:"goles",rationale:`XG total: ${m.total}. Ambos equipos con buen ataque.`});
+  else if(xg<2.1)list.push({pick:"Under 2.5 goles",conf:Math.round(100-(+m.o25)),cat:"goles",rationale:"Perfil defensivo sólido."});
+  if(xg>3.2)list.push({pick:"Over 3.5 goles",conf:+m.o35,cat:"goles",rationale:"XG muy alto — partido muy abierto."});
   const b=+m.btts;
-  if(b>52) list.push({pick:"BTTS Sí (ambos marcan)",conf:Math.round(b),cat:"goles",rationale:"Ambos equipos crean peligro real."});
-  else if(b<40) list.push({pick:"BTTS No",conf:Math.round(100-b),cat:"goles",rationale:"Una defensa muy sólida o rival con poco ataque."});
-  if(+m.avgC>=9.8) list.push({pick:"Over 9.5 corners",conf:+m.cO85,cat:"corners",rationale:`Promedio combinado real: ${m.avgC} córners/partido.`});
+  if(b>52)list.push({pick:"BTTS Sí",conf:Math.round(b),cat:"goles",rationale:"Ambos equipos tienen capacidad goleadora."});
+  else if(b<38)list.push({pick:"BTTS No",conf:Math.round(100-b),cat:"goles",rationale:"Una defensa muy sólida o rival con poco ataque."});
+  // Corners
+  if(+m.avgC>=9.8)list.push({pick:"Over 9.5 corners",conf:+m.cO95,cat:"corners",rationale:`Promedio combinado: ${m.avgC} corners/PJ.`});
   else list.push({pick:"Under 10.5 corners",conf:Math.round(100-(+m.cO105)),cat:"corners",rationale:`Promedio ${m.avgC}. Juego más directo.`});
-  if(+m.avgY>=4.0) list.push({pick:"Over 3.5 tarjetas",conf:+m.yO35,cat:"tarjetas",rationale:`Historial real: ${m.avgY} amarillas/partido.`});
-  else list.push({pick:"Under 4.5 tarjetas",conf:Math.round(100-(+m.yO45)),cat:"tarjetas",rationale:"Ambas selecciones con buena disciplina."});
-  return list.filter(p=>p.conf>42).sort((a,b)=>b.conf-a.conf);
+  // Tarjetas
+  if(+m.avgY>=4.0)list.push({pick:"Over 3.5 tarjetas",conf:+m.yO35,cat:"tarjetas",rationale:`Promedio combinado: ${m.avgY} amarillas/PJ.`});
+  else list.push({pick:"Under 4.5 tarjetas",conf:Math.round(100-(+m.yO45)),cat:"tarjetas",rationale:"Buena disciplina en ambos equipos."});
+  // Primera mitad
+  if(+m.fhO15>45)list.push({pick:"Over 0.5 goles 1T",conf:+m.fhO05,cat:"1T",rationale:`XG primera mitad estimado: ${(+m.xg1H+ +m.xg2H).toFixed(2)}.`});
+  list.push({pick:"Over 1.5 goles 1T",conf:+m.o25H,cat:"1T",rationale:"Basado en promedio de goles en primera mitad."});
+  // Hándicap
+  if(m.hdp!==0)list.push({pick:`Hándicap ${m.hdpFav} (${m.hdp>0?"+":"-"}0.5)`,conf:Math.round(Math.max(p1,p2)+8),cat:"handicap",rationale:`Ventaja significativa de ${m.hdpFav}. Hándicap asiático recomendado.`});
+  return list.filter(p=>p.conf>40).sort((a,b)=>b.conf-a.conf);
 }
 
-// ── Start ─────────────────────────────────────────────────────────────────────
+function renderPicksTab(m,picks,t1,t2,d1,d2){
+  document.getElementById("picks-match-label").textContent=`${t1} vs ${t2}`;
+  const mainPicks=picks.filter(p=>p.cat==="resultado"||p.cat==="goles");
+  const firstHalf=picks.filter(p=>p.cat==="1T");
+  const handicap=picks.filter(p=>p.cat==="handicap");
+  const others=picks.filter(p=>p.cat==="corners"||p.cat==="tarjetas");
+
+  function pickHtml(p,i){
+    const cl=p.conf>=72?C.green:p.conf>=56?C.yellow:C.red;
+    const allPicks=[...mainPicks,...firstHalf,...handicap,...others];
+    const realI=allPicks.indexOf(p);
+    return`<div class="pick-row" style="background:${cl}0d;border:1px solid ${cl}33">
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+          <span style="color:#eceff1;font-weight:700;font-size:12px">✦ ${p.pick}</span>
+          <span style="color:${cl};font-size:11px;font-weight:700;background:${cl}22;border-radius:6px;padding:2px 7px">${Math.round(p.conf)}%</span>
+        </div>
+        <div style="color:#546e7a;font-size:10px">${p.rationale}</div>
+      </div>
+      <button onclick="savePick(${realI})" style="background:${cl}22;border:1px solid ${cl};border-radius:7px;color:${cl};cursor:pointer;padding:5px 9px;font-size:11px;font-weight:700;flex-shrink:0">+</button>
+    </div>`;
+  }
+
+  document.getElementById("picks-list").innerHTML=[...mainPicks,...others].map(pickHtml).join("");
+  document.getElementById("first-half-picks").innerHTML=firstHalf.length?firstHalf.map(pickHtml).join(""):`<div style="font-size:11px;color:#546e7a">Sin picks de primera mitad destacados.</div>`;
+  document.getElementById("handicap-picks").innerHTML=handicap.length?handicap.map(pickHtml).join(""):`<div style="font-size:11px;color:#546e7a">Los equipos están muy igualados para hándicap.</div>`;
+  document.getElementById("picks-content").style.display="block";
+  document.getElementById("picks-empty").style.display="none";
+}
+
+function renderValorTab(){
+  if(!state.picks.length){document.getElementById("valor-empty").style.display="block";return;}
+  document.getElementById("valor-empty").style.display="none";
+  document.getElementById("valor-picks-list").innerHTML=state.picks.slice(0,8).map((p,i)=>{
+    const cl=p.conf>=72?C.green:p.conf>=56?C.yellow:C.red;
+    return`<div style="background:#0b0f1a;border:1px solid #1e2d45;border-radius:10px;padding:11px 13px;margin-bottom:9px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span style="font-size:12px;font-weight:700;color:#eceff1">✦ ${p.pick}</span>
+        <span style="color:${cl};font-size:11px;font-weight:700">${Math.round(p.conf)}%</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input class="input-field" id="odds-${i}" placeholder="Cuota (ej: 1.85)" type="number" step="0.01" style="flex:1;font-size:12px;padding:7px 9px" oninput="calcEV(${i},${p.conf})"/>
+        <div id="ev-${i}" style="min-width:80px;text-align:center;font-size:12px;font-weight:700;color:#546e7a">EV: —</div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function calcEV(i,conf){
+  const odds=parseFloat(document.getElementById(`odds-${i}`).value);
+  const el=document.getElementById(`ev-${i}`);
+  if(isNaN(odds)||odds<=1){el.textContent="EV: —";el.style.color="#546e7a";return;}
+  const prob=conf/100;
+  const ev=((prob*odds)-1)*100;
+  el.textContent=`EV: ${ev>=0?"+":""}${ev.toFixed(1)}%`;
+  el.style.color=ev>=0?C.green:C.red;
+  const badge=ev>=5?"🔥 GRAN VALOR":ev>=0?"✅ CON VALOR":"❌ SIN VALOR";
+  el.textContent=`${badge} ${ev>=0?"+":""}${ev.toFixed(0)}%`;
+}
+
+function savePick(i){
+  const allPicks=state.picks;
+  const p=allPicks[i];
+  if(!p)return;
+  const t1=document.getElementById("team1-select").value,t2=document.getElementById("team2-select").value;
+  const entry={...p,conf:Math.round(p.conf),match:`${t1} vs ${t2}`,id:Date.now(),inParlay:false};
+  state.saved.push(entry);
+  localStorage.setItem("saved_picks",JSON.stringify(state.saved));
+  updateCartera();
+  document.getElementById("cartera-count").textContent=state.saved.length;
+}
+
+function addToParlay(i){
+  const p=state.saved[i];
+  if(!p)return;
+  if(state.parlay.find(x=>x.id===p.id)){alert("Este pick ya está en el parlay");return;}
+  state.parlay.push({...p});
+  localStorage.setItem("parlay_picks",JSON.stringify(state.parlay));
+  updateParlay();
+}
+
+function removeFromParlay(i){
+  state.parlay.splice(i,1);
+  localStorage.setItem("parlay_picks",JSON.stringify(state.parlay));
+  updateParlay();
+}
+
+function updateParlay(){
+  const list=state.parlay;
+  const el=document.getElementById("parlay-list");
+  const sumEl=document.getElementById("parlay-summary");
+  const emEl=document.getElementById("parlay-empty");
+  if(!list.length){el.innerHTML="";sumEl.style.display="none";emEl.style.display="block";return;}
+  emEl.style.display="none";
+  el.innerHTML=list.map((p,i)=>{
+    const cl=p.conf>=72?C.green:p.conf>=56?C.yellow:C.red;
+    return`<div class="parlay-item">
+      <div style="flex:1">
+        <div style="font-size:10px;color:#546e7a;margin-bottom:2px">${p.match}</div>
+        <div style="font-size:12px;font-weight:700;color:#eceff1">✦ ${p.pick}</div>
+        <div style="font-size:11px;color:${cl};margin-top:2px">${p.conf}% confianza</div>
+      </div>
+      <button onclick="removeFromParlay(${i})" style="background:none;border:none;color:#ff5252;cursor:pointer;font-size:16px;padding:0 4px">✕</button>
+    </div>`;
+  }).join("");
+  const combinedProb=list.reduce((acc,p)=>acc*(p.conf/100),1);
+  const combinedOdds=list.reduce((acc,p)=>acc*(100/p.conf),1);
+  sumEl.style.display="block";
+  document.getElementById("parlay-prob").textContent=`${(combinedProb*100).toFixed(1)}%`;
+  document.getElementById("parlay-odds").textContent=combinedOdds.toFixed(2);
+  document.getElementById("parlay-count").textContent=list.length;
+}
+
+function calcBet(){
+  const amount=parseFloat(document.getElementById("bet-amount").value);
+  if(isNaN(amount)||amount<=0){alert("Ingresa un monto válido");return;}
+  const odds=parseFloat(document.getElementById("parlay-odds")?.textContent)||1;
+  if(odds<=1){alert("Primero arma un parlay");return;}
+  const win=(amount*odds).toFixed(2);
+  const profit=(amount*(odds-1)).toFixed(2);
+  document.getElementById("bet-result").style.display="block";
+  document.getElementById("bet-win").textContent=`$${win}`;
+  document.getElementById("bet-profit").textContent=`$${profit}`;
+}
+
+function updateCartera(){
+  const count=state.saved.length;
+  document.getElementById("cartera-count").textContent=count;
+  document.getElementById("cartera-sub").textContent=`${count} picks guardados`;
+  const el=document.getElementById("cartera-list");
+  if(!count){el.innerHTML="";document.getElementById("cartera-empty").style.display="block";document.getElementById("cartera-summary").style.display="none";return;}
+  document.getElementById("cartera-empty").style.display="none";
+  el.innerHTML=state.saved.map((p,i)=>{
+    const cl=p.conf>=70?C.green:p.conf>=55?C.yellow:C.red;
+    const cc=catColor[p.cat]||C.blue;
+    return`<div style="background:#0b0f1a;border:1px solid #1e2d45;border-radius:10px;padding:11px 13px;margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+        <span style="font-size:10px;color:#546e7a">⚽ ${p.match}</span>
+        <div style="display:flex;gap:5px;align-items:center">
+          <span class="tag" style="background:${cc}22;color:${cc};border:1px solid ${cc}44">${p.cat}</span>
+          <button onclick="addToParlay(${i})" style="background:${C.purple}22;border:1px solid ${C.purple};border-radius:5px;color:${C.purple};cursor:pointer;padding:1px 7px;font-size:10px;font-weight:700">+Parlay</button>
+          <button onclick="removeSaved(${i})" style="background:none;border:none;color:#ff5252;cursor:pointer;font-size:13px;padding:0">✕</button>
+        </div>
+      </div>
+      <div style="font-weight:700;font-size:12px;color:#eceff1;margin-bottom:2px">✦ ${p.pick}</div>
+      <div style="font-size:10px;color:#546e7a;margin-bottom:5px">${p.rationale}</div>
+      <span style="font-size:12px;font-weight:700;color:${cl}">${p.conf}% confianza</span>
+    </div>`;
+  }).join("");
+  const avg=Math.round(state.saved.reduce((a,b)=>a+b.conf,0)/count);
+  const high=state.saved.filter(p=>p.conf>=70).length;
+  document.getElementById("cartera-summary").style.display="block";
+  document.getElementById("cartera-summary").textContent=`💡 Alta confianza (≥70%): ${high} · Promedio: ${avg}%`;
+}
+
+function removeSaved(i){state.saved.splice(i,1);localStorage.setItem("saved_picks",JSON.stringify(state.saved));updateCartera();}
+
+function saveKey(){
+  const val=document.getElementById("api-key-input").value.trim();
+  if(!val.startsWith("gsk_")){alert("La key debe empezar con gsk_\nVe a console.groq.com");return;}
+  localStorage.setItem("groq_key",val);
+  document.getElementById("key-status").style.display="block";
+  document.getElementById("key-status").textContent="✓ API key guardada";
+  hideWarn();setTimeout(()=>switchTab("analisis"),1000);
+}
+function toggleKey(){const i=document.getElementById("api-key-input");i.type=i.type==="password"?"text":"password";document.getElementById("toggle-btn").textContent=i.type==="password"?"👁":"🙈";}
+function showWarn(){document.getElementById("no-api-warn").style.display="block";}
+function hideWarn(){document.getElementById("no-api-warn").style.display="none";}
+
 init();
 </script>
 </body>
