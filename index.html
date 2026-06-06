@@ -297,10 +297,9 @@ async function fetchTeam(teamName) {
   const key = localStorage.getItem("gemini_key");
   if (!key) throw new Error("Falta la API key. Ve a ⚙️ Config y guárdala.");
 
-  // AQ. keys use v1alpha, AIza keys use v1beta
-  const isNewFormat = key.startsWith("AQ.");
-  const baseUrl = isNewFormat
-    ? `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${key}`;
+  // Use v1beta with gemini-2.0-flash-lite — works with both AIza and AQ. keys
+  const baseUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${key}`;
+
   const prompt = `You are a football statistics expert. Search and provide REAL and CURRENT statistics for the ${teamName} national football team from their last 2 years of matches (2024 and 2025). Include data from World Cup 2026 qualifiers, Copa América 2024, Euro 2024, AFCON 2025, Nations League, and recent friendlies.
 
 Return ONLY a valid JSON object, no markdown, no explanation, nothing else:
