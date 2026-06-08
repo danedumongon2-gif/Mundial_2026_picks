@@ -51,8 +51,8 @@ select{appearance:none;-webkit-appearance:none}
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
       <span style="font-size:24px">⚽</span>
       <div>
-        <h1 style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:#00e676;line-height:1">PICKS MUNDIAL 2026</h1>
-        <p style="font-size:9px;color:#546e7a;letter-spacing:1px">ANÁLISIS · PICKS · PARLAY · VALOR · HEAD2HEAD</p>
+        <h1 style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:#00e676;line-height:1">⚽ PICKS FÚTBOL</h1>
+        <p style="font-size:9px;color:#546e7a;letter-spacing:1px">ANÁLISIS · PICKS · PARLAY · VALOR · CUALQUIER SELECCIÓN</p>
       </div>
     </div>
     <div style="display:flex;gap:5px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none">
@@ -245,19 +245,35 @@ select{appearance:none;-webkit-appearance:none}
 <!-- TAB CONFIG -->
 <div id="tab-config" style="display:none">
   <div class="card">
-    <div class="section-title" style="font-size:18px;color:#ffc107">⚙️ API KEY (GROQ)</div>
-    <div style="font-size:12px;color:#546e7a;margin-bottom:16px;line-height:1.7">
-      Gratis en <strong style="color:#448aff">console.groq.com</strong><br>
-      La key empieza con <code style="color:#00e676">gsk_...</code>
+    <div class="section-title" style="font-size:18px;color:#ffc107">⚙️ API KEYS</div>
+
+    <div style="margin-bottom:16px">
+      <div style="font-size:11px;color:#00e676;font-weight:700;margin-bottom:4px">🔍 TAVILY (búsqueda web real — gratis)</div>
+      <div style="font-size:11px;color:#546e7a;margin-bottom:8px">Consíguela en <strong style="color:#448aff">tavily.com</strong> → Overview → API Key</div>
+      <div style="display:flex;gap:8px">
+        <input type="password" id="tavily-key-input" class="input-field" placeholder="tvly-..." style="font-family:monospace"/>
+        <button onclick="toggleTavilyKey()" id="toggle-tavily-btn" style="background:#0b0f1a;border:1px solid #1e2d45;border-radius:8px;color:#546e7a;cursor:pointer;padding:0 12px;font-size:14px;flex-shrink:0">👁</button>
+      </div>
+      <div id="tavily-status" style="display:none;margin-top:6px;font-size:11px;color:#00e676;font-weight:700"></div>
     </div>
-    <div style="margin-bottom:12px">
+
+    <div style="margin-bottom:16px">
+      <div style="font-size:11px;color:#ffc107;font-weight:700;margin-bottom:4px">🤖 GROQ (análisis AI — gratis)</div>
+      <div style="font-size:11px;color:#546e7a;margin-bottom:8px">Consíguela en <strong style="color:#448aff">console.groq.com</strong> → API Keys</div>
       <div style="display:flex;gap:8px">
         <input type="password" id="api-key-input" class="input-field" placeholder="gsk_..." style="font-family:monospace"/>
         <button onclick="toggleKey()" id="toggle-btn" style="background:#0b0f1a;border:1px solid #1e2d45;border-radius:8px;color:#546e7a;cursor:pointer;padding:0 12px;font-size:14px;flex-shrink:0">👁</button>
       </div>
+      <div id="key-status" style="display:none;margin-top:6px;font-size:11px;color:#00e676;font-weight:700"></div>
     </div>
-    <button onclick="saveKey()" class="primary-btn">GUARDAR API KEY</button>
-    <div id="key-status" style="display:none;margin-top:10px;font-size:12px;color:#00e676;text-align:center;font-weight:700"></div>
+
+    <button onclick="saveKeys()" class="primary-btn">GUARDAR API KEYS</button>
+
+    <div style="margin-top:12px;background:#00e67611;border:1px solid #00e67633;border-radius:9px;padding:11px;font-size:11px;color:#546e7a;line-height:1.6">
+      🔍 <strong style="color:#00e676">Tavily</strong> busca datos reales en internet (últimos partidos, ranking, estadísticas actuales)<br>
+      🤖 <strong style="color:#ffc107">Groq</strong> analiza esos datos y genera los picks<br>
+      Ambas son <strong style="color:#eceff1">100% gratis</strong>
+    </div>
   </div>
 
   <div class="card">
@@ -284,7 +300,34 @@ select{appearance:none;-webkit-appearance:none}
 </div>
 
 <script>
-const ALL_TEAMS = ["Alemania","Argelia","Argentina","Arabia Saudí","Australia","Austria","Bélgica","Bosnia","Brasil","Cabo Verde","Canadá","Catar","Chequia","Colombia","Corea del Sur","Costa de Marfil","Croacia","Curazao","DR Congo","Ecuador","Egipto","Escocia","España","USA","Francia","Ghana","Haití","Inglaterra","Irán","Irak","Japón","Jordania","Marruecos","México","Noruega","Nueva Zelanda","Países Bajos","Panamá","Paraguay","Portugal","Senegal","Suecia","Sudáfrica","Suiza","Túnez","Turquía","Uruguay","Uzbekistán"].sort();
+const ALL_TEAMS = [
+  "Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia","Australia","Austria","Azerbaijan",
+  "Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi",
+  "Cambodia","Cameroon","Canada","Cape Verde","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo","Costa Rica","Croatia","Cuba","Curacao","Cyprus","Czech Republic",
+  "DR Congo","Denmark","Djibouti","Dominican Republic",
+  "Ecuador","Egypt","El Salvador","England","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia",
+  "Fiji","Finland","France",
+  "Gabon","Gambia","Georgia","Germany","Ghana","Greece","Guatemala","Guinea","Guinea-Bissau","Guyana",
+  "Haiti","Honduras","Hungary",
+  "Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Ivory Coast",
+  "Jamaica","Japan","Jordan",
+  "Kazakhstan","Kenya","Kosovo","Kuwait","Kyrgyzstan",
+  "Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg",
+  "Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Mauritania","Mauritius","Mexico","Moldova","Mongolia","Montenegro","Morocco","Mozambique","Myanmar",
+  "Namibia","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway",
+  "Oman",
+  "Pakistan","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal",
+  "Qatar",
+  "Romania","Russia","Rwanda",
+  "San Marino","Saudi Arabia","Scotland","Senegal","Serbia","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria",
+  "Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan",
+  "Uganda","Ukraine","United Arab Emirates","Uruguay","USA","Uzbekistan",
+  "Venezuela","Vietnam",
+  "Wales","Yemen",
+  "Zambia","Zimbabwe",
+  // Spanish names for convenience
+  "Alemania","Argelia","Argentina","Arabia Saudí","Australia","Austria","Bélgica","Bosnia","Brasil","Cabo Verde","Canadá","Catar","Chequia","Colombia","Corea del Sur","Costa de Marfil","Croacia","Curazao","DR Congo","Ecuador","Egipto","Escocia","España","Francia","Ghana","Haití","Inglaterra","Irán","Irak","Japón","Jordania","Marruecos","México","Noruega","Nueva Zelanda","Países Bajos","Panamá","Paraguay","Portugal","Senegal","Suecia","Sudáfrica","Suiza","Túnez","Turquía","Uruguay","Uzbekistán","Gales","Dinamarca","Grecia","Hungría","Italia","Polonia","Rumania","Rusia","Serbia","Ucrania","Venezuela","Nigeria","Camerún","Costa Rica","Chile","Perú","Bolivia","El Salvador","Honduras","Guatemala","Cuba","Jamaica","Trinidad y Tobago"
+].filter((v,i,a)=>a.indexOf(v)===i).sort();
 
 const C={bg:"#0b0f1a",card:"#131929",border:"#1e2d45",green:"#00e676",yellow:"#ffc107",red:"#ff5252",blue:"#448aff",purple:"#e040fb",dim:"#546e7a",text:"#eceff1"};
 const catColor={resultado:C.blue,goles:C.green,corners:C.yellow,tarjetas:C.red,"1T":C.blue,handicap:C.purple};
@@ -300,8 +343,10 @@ function init(){
   try{state.parlay=JSON.parse(localStorage.getItem("parlay_picks")||"[]");}catch(e){}
   updateCartera();updateParlay();
   const k=localStorage.getItem("groq_key");
-  if(k){document.getElementById("api-key-input").value=k;document.getElementById("key-status").style.display="block";document.getElementById("key-status").textContent="✓ API key guardada";hideWarn();}
+  if(k){document.getElementById("api-key-input").value=k;document.getElementById("key-status").style.display="block";document.getElementById("key-status").textContent="✓ Groq guardada";hideWarn();}
   else showWarn();
+  const tk=localStorage.getItem("tavily_key");
+  if(tk){document.getElementById("tavily-key-input").value=tk;document.getElementById("tavily-status").style.display="block";document.getElementById("tavily-status").textContent="✓ Tavily guardada — búsqueda web activada 🔍";}
 }
 
 function updateLabels(){
@@ -329,21 +374,48 @@ function onTeamChange(){
 
 async function fetchTeam(teamName){
   if(state.cache[teamName])return state.cache[teamName];
-  const key=localStorage.getItem("groq_key");
-  if(!key)throw new Error("Sin API key");
+  const groqKey=localStorage.getItem("groq_key");
+  const tavilyKey=localStorage.getItem("tavily_key");
+  if(!groqKey)throw new Error("Sin API key de Groq. Ve a ⚙️ Config.");
+
   const injuries1=document.getElementById("injuries1").value;
   const injuries2=document.getElementById("injuries2").value;
   const isT1=teamName===document.getElementById("team1-select").value;
-  const injuriesNote=isT1&&injuries1?` Key absences: ${injuries1}.`:!isT1&&injuries2?` Key absences: ${injuries2}.`:"";
+  const injuriesNote=isT1&&injuries1?` Bajas: ${injuries1}.`:!isT1&&injuries2?` Bajas: ${injuries2}.`:"";
 
-  const prompt=`You are a football statistics expert. Provide statistics for the ${teamName} national team based on 2023-2024 international matches including World Cup qualifiers, continental tournaments, and friendlies.${injuriesNote}
-Return ONLY valid JSON, no markdown:
-{"rank":<FIFA rank>,"form":<avg pts/game 0-3>,"gs":<avg goals scored>,"gc":<avg goals conceded>,"corners":<avg corners>,"yellows":<avg yellows>,"reds":<avg reds>,"att":<attack 0-100>,"def":<defense 0-100>,"confederation":"UEFA|CONMEBOL|CONCACAF|AFC|CAF|OFC","last5":["W 2-0 vs X","D 1-1 vs Y","L 0-1 vs Z","W 1-0 vs A","W 3-1 vs B"],"keyPlayers":["P1","P2","P3"],"h2hAdvantage":<vs opponent advantage -10 to 10>,"firstHalfGoals":<avg goals 1st half>,"secondHalfGoals":<avg goals 2nd half>,"notes":"current form summary"}`;
+  // Step 1: Search real data with Tavily if key available
+  let webContext="";
+  if(tavilyKey){
+    try{
+      const tavilyRes=await fetch("https://api.tavily.com/search",{
+        method:"POST",
+        headers:{"Content-Type":"application/json","Authorization":`Bearer ${tavilyKey}`},
+        body:JSON.stringify({
+          query:`${teamName} national football team 2024 2025 results statistics form FIFA ranking goals corners yellow cards`,
+          search_depth:"basic",
+          max_results:5,
+          include_answer:true,
+        }),
+      });
+      if(tavilyRes.ok){
+        const tavilyData=await tavilyRes.json();
+        const results=(tavilyData.results||[]).map(r=>`${r.title}: ${r.content}`).join("\n");
+        const answer=tavilyData.answer||"";
+        webContext=`\n\nREAL WEB DATA (use this to extract accurate stats):\n${answer}\n${results}`;
+      }
+    }catch(e){console.log("Tavily error:",e.message);}
+  }
+
+  // Step 2: Groq analyzes the web data and generates structured stats
+  const prompt=`You are a football statistics expert. Analyze the following real web data about ${teamName} national team and extract accurate statistics for 2024-2025.${injuriesNote}${webContext}
+
+Based on ALL available information, return ONLY valid JSON, no markdown:
+{"rank":<current FIFA ranking integer>,"form":<avg points per game last 15 matches 0.0-3.0>,"gs":<avg goals scored per match>,"gc":<avg goals conceded per match>,"corners":<avg corners per match>,"yellows":<avg yellow cards per match>,"reds":<avg red cards per match>,"att":<attack strength 0-100>,"def":<defense strength 0-100>,"confederation":"UEFA|CONMEBOL|CONCACAF|AFC|CAF|OFC","last5":["W 2-0 vs X","D 1-1 vs Y","L 0-1 vs Z","W 1-0 vs A","W 3-1 vs B"],"keyPlayers":["P1","P2","P3"],"firstHalfGoals":<avg goals 1st half>,"secondHalfGoals":<avg goals 2nd half>,"notes":"current form summary with real recent results"}`;
 
   const res=await fetch("https://api.groq.com/openai/v1/chat/completions",{
     method:"POST",
-    headers:{"Content-Type":"application/json","Authorization":`Bearer ${key}`},
-    body:JSON.stringify({model:"llama-3.3-70b-versatile",temperature:0.2,max_tokens:900,messages:[{role:"user",content:prompt}]}),
+    headers:{"Content-Type":"application/json","Authorization":`Bearer ${groqKey}`},
+    body:JSON.stringify({model:"llama-3.3-70b-versatile",temperature:0.1,max_tokens:900,messages:[{role:"user",content:prompt}]}),
   });
   if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e?.error?.message||`Error ${res.status}`);}
   const data=await res.json();
@@ -351,6 +423,7 @@ Return ONLY valid JSON, no markdown:
   const m=text.match(/\{[\s\S]*\}/);
   if(!m)throw new Error("Respuesta inválida");
   const parsed=JSON.parse(m[0]);
+  parsed.hasWebData=!!webContext;
   state.cache[teamName]=parsed;
   return parsed;
 }
@@ -400,7 +473,7 @@ function renderTeamCard(id,name,data,loading,error,color){
   el.innerHTML=`
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <span style="font-family:'Bebas Neue',sans-serif;font-size:17px;color:${color};letter-spacing:2px">${name}</span>
-      <span class="tag" style="background:#00e67622;color:#00e676;border:1px solid #00e67644;font-size:9px">DATOS ✓</span>
+      <span class="tag" style="background:${data.hasWebData?"#00e67622":"#ffc10722"};color:${data.hasWebData?"#00e676":"#ffc107"};border:1px solid ${data.hasWebData?"#00e67644":"#ffc10744"};font-size:9px">${data.hasWebData?"🔍 WEB REAL ✓":"📊 BASE DE DATOS"}</span>
     </div>
     <div style="display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap">
       <div class="stat-box" style="border:1px solid ${color}33"><div class="stat-val" style="color:${color}">#${data.rank}</div><div class="stat-lbl">FIFA</div></div>
@@ -464,34 +537,100 @@ function renderAnalysis(m,d1,d2,t1,t2){
     </div>
   </div>
 
-  <div class="card">
-    <div class="section-title" style="font-size:15px;color:${C.yellow}">⛳ CORNERS</div>
-    <div style="display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap">
-      <div class="stat-box" style="border:1px solid ${C.blue}33"><div class="stat-val" style="color:${C.blue}">${d1.corners}</div><div class="stat-lbl">${t1.split(" ")[0]}</div><div class="stat-sub" style="color:${C.blue}99">/PJ</div></div>
-      <div class="stat-box" style="border:1px solid ${C.red}33"><div class="stat-val" style="color:${C.red}">${d2.corners}</div><div class="stat-lbl">${t2.split(" ")[0]}</div><div class="stat-sub" style="color:${C.red}99">/PJ</div></div>
+  <div class="card" style="grid-column:1/-1">
+    <div class="section-title" style="font-size:15px;color:${C.yellow}">⛳ CORNERS — ANÁLISIS COMPLETO</div>
+    <div style="display:flex;gap:5px;margin-bottom:14px;flex-wrap:wrap">
+      <div class="stat-box" style="border:1px solid ${C.blue}33"><div class="stat-val" style="color:${C.blue}">${d1.corners}</div><div class="stat-lbl">${t1.split(" ")[0]}/PJ</div></div>
+      <div class="stat-box" style="border:1px solid ${C.red}33"><div class="stat-val" style="color:${C.red}">${d2.corners}</div><div class="stat-lbl">${t2.split(" ")[0]}/PJ</div></div>
       <div class="stat-box" style="border:1px solid ${C.yellow}33"><div class="stat-val" style="color:${C.yellow}">${m.avgC}</div><div class="stat-lbl">Total est.</div></div>
+      <div class="stat-box" style="border:1px solid ${C.blue}33"><div class="stat-val" style="color:${C.blue};font-size:14px">${m.avgC1H}</div><div class="stat-lbl">Est. 1T</div></div>
+      <div class="stat-box" style="border:1px solid ${C.green}33"><div class="stat-val" style="color:${C.green};font-size:14px">${m.avgC2H}</div><div class="stat-lbl">Est. 2T</div></div>
     </div>
-    ${gauge(m.cO85,"Over 8.5 corners",C.yellow)}
-    ${gauge(m.cO95,"Over 9.5 corners",C.yellow)}
-    ${gauge(m.cO105,"Over 10.5 corners",C.red)}
-    <div style="margin-top:8px;padding:7px 9px;background:#0b0f1a;border-radius:7px;font-size:10px;color:#546e7a;border-left:3px solid ${C.yellow}">
-      ${+m.avgC>9.5?"Ambos equipos atacan con amplitud — alto volumen esperado":"Juego más directo y vertical — menos corners"}
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <div>
+        <div style="font-size:10px;color:#546e7a;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid #1e2d45;padding-bottom:4px">📊 TOTALES</div>
+        ${gauge(m.cO65,"Over 6.5",C.green)}
+        ${gauge(m.cO75,"Over 7.5",C.green)}
+        ${gauge(m.cO85,"Over 8.5",C.yellow)}
+        ${gauge(m.cO95,"Over 9.5",C.yellow)}
+        ${gauge(m.cO105,"Over 10.5",C.red)}
+        ${gauge(m.cO115,"Over 11.5",C.red)}
+        ${gauge(m.cO125,"Over 12.5",C.red)}
+      </div>
+      <div>
+        <div style="font-size:10px;color:#448aff;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid #1e2d45;padding-bottom:4px">🔵 ${t1.split(" ")[0]} (~${m.teamC1})</div>
+        ${gauge(m.t1cO25,"Over 2.5",C.blue)}
+        ${gauge(m.t1cO35,"Over 3.5",C.blue)}
+        ${gauge(m.t1cO45,"Over 4.5",C.blue)}
+        ${gauge(m.t1cO55,"Over 5.5",C.blue)}
+        ${gauge(m.t1cO65,"Over 6.5",C.blue)}
+        <div style="font-size:10px;color:#ff5252;text-transform:uppercase;letter-spacing:1px;margin:10px 0 8px;border-bottom:1px solid #1e2d45;padding-bottom:4px">🔴 ${t2.split(" ")[0]} (~${m.teamC2})</div>
+        ${gauge(m.t2cO25,"Over 2.5",C.red)}
+        ${gauge(m.t2cO35,"Over 3.5",C.red)}
+        ${gauge(m.t2cO45,"Over 4.5",C.red)}
+        ${gauge(m.t2cO55,"Over 5.5",C.red)}
+        ${gauge(m.t2cO65,"Over 6.5",C.red)}
+      </div>
+      <div>
+        <div style="font-size:10px;color:#546e7a;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid #1e2d45;padding-bottom:4px">⏱ 1ª MITAD (~${m.avgC1H})</div>
+        ${gauge(m.c1HO25,"Over 2.5",C.purple)}
+        ${gauge(m.c1HO35,"Over 3.5",C.purple)}
+        ${gauge(m.c1HO45,"Over 4.5",C.purple)}
+        ${gauge(m.c1HO55,"Over 5.5",C.purple)}
+        <div style="font-size:10px;color:#546e7a;text-transform:uppercase;letter-spacing:1px;margin:10px 0 8px;border-bottom:1px solid #1e2d45;padding-bottom:4px">⏱ 2ª MITAD (~${m.avgC2H})</div>
+        ${gauge(m.c2HO35,"Over 3.5",C.green)}
+        ${gauge(m.c2HO45,"Over 4.5",C.green)}
+        ${gauge(m.c2HO55,"Over 5.5",C.green)}
+        ${gauge(m.c2HO65,"Over 6.5",C.green)}
+      </div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="section-title" style="font-size:15px;color:${C.red}">🟨 TARJETAS</div>
-    <div style="display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap">
-      <div class="stat-box" style="border:1px solid ${C.yellow}33"><div class="stat-val" style="color:${C.yellow}">${d1.yellows}</div><div class="stat-lbl">${t1.split(" ")[0]}</div><div class="stat-sub" style="color:${C.yellow}99">amar/PJ</div></div>
-      <div class="stat-box" style="border:1px solid ${C.yellow}33"><div class="stat-val" style="color:${C.yellow}">${d2.yellows}</div><div class="stat-lbl">${t2.split(" ")[0]}</div><div class="stat-sub" style="color:${C.yellow}99">amar/PJ</div></div>
+  <div class="card" style="grid-column:1/-1">
+    <div class="section-title" style="font-size:15px;color:${C.red}">🟨 TARJETAS — ANÁLISIS COMPLETO</div>
+    <div style="display:flex;gap:5px;margin-bottom:14px;flex-wrap:wrap">
+      <div class="stat-box" style="border:1px solid ${C.blue}33"><div class="stat-val" style="color:${C.blue}">${m.y1}</div><div class="stat-lbl">${t1.split(" ")[0]} amar/PJ</div></div>
+      <div class="stat-box" style="border:1px solid ${C.red}33"><div class="stat-val" style="color:${C.red}">${m.y2}</div><div class="stat-lbl">${t2.split(" ")[0]} amar/PJ</div></div>
+      <div class="stat-box" style="border:1px solid ${C.yellow}33"><div class="stat-val" style="color:${C.yellow}">${m.avgY}</div><div class="stat-lbl">Total amar.</div></div>
       <div class="stat-box" style="border:1px solid ${C.red}33"><div class="stat-val" style="color:${C.red}">${m.avgR}</div><div class="stat-lbl">Rojas est.</div></div>
+      <div class="stat-box" style="border:1px solid #ff880033"><div class="stat-val" style="color:#ff8800;font-size:14px">${m.totalCards}</div><div class="stat-lbl">Total tarj.</div></div>
     </div>
-    ${gauge(m.yO25,"Over 2.5 amarillas",C.yellow)}
-    ${gauge(m.yO35,"Over 3.5 amarillas",C.yellow)}
-    ${gauge(m.yO45,"Over 4.5 amarillas",C.red)}
-    <div style="margin-top:8px;padding:7px 9px;background:#0b0f1a;border-radius:7px;font-size:10px;color:#546e7a;border-left:3px solid ${C.red}">
-      Total: ${m.avgY} amar. estimadas · ${+m.avgY>=4?"Partido físico":"Juego relativamente limpio"}
-      ${referee?`<br>⚖️ Árbitro: <strong style="color:#eceff1">${referee}</strong> — considera su historial de tarjetas`:""}
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <div>
+        <div style="font-size:10px;color:#546e7a;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid #1e2d45;padding-bottom:4px">🟨 AMARILLAS TOTALES</div>
+        ${gauge(m.yO05,"Over 0.5",C.green)}
+        ${gauge(m.yO15,"Over 1.5",C.green)}
+        ${gauge(m.yO25,"Over 2.5",C.yellow)}
+        ${gauge(m.yO35,"Over 3.5",C.yellow)}
+        ${gauge(m.yO45,"Over 4.5",C.red)}
+        ${gauge(m.yO55,"Over 5.5",C.red)}
+        ${gauge(m.yO65,"Over 6.5",C.red)}
+      </div>
+      <div>
+        <div style="font-size:10px;color:#448aff;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid #1e2d45;padding-bottom:4px">🔵 ${t1.split(" ")[0]} (~${m.y1} amar)</div>
+        ${gauge(m.t1yO05,"Over 0.5",C.blue)}
+        ${gauge(m.t1yO15,"Over 1.5",C.blue)}
+        ${gauge(m.t1yO25,"Over 2.5",C.blue)}
+        ${gauge(m.t1yO35,"Over 3.5",C.blue)}
+        <div style="font-size:10px;color:#ff5252;text-transform:uppercase;letter-spacing:1px;margin:10px 0 8px;border-bottom:1px solid #1e2d45;padding-bottom:4px">🔴 ${t2.split(" ")[0]} (~${m.y2} amar)</div>
+        ${gauge(m.t2yO05,"Over 0.5",C.red)}
+        ${gauge(m.t2yO15,"Over 1.5",C.red)}
+        ${gauge(m.t2yO25,"Over 2.5",C.red)}
+        ${gauge(m.t2yO35,"Over 3.5",C.red)}
+      </div>
+      <div>
+        <div style="font-size:10px;color:#546e7a;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid #1e2d45;padding-bottom:4px">🟥 TARJETAS ROJAS</div>
+        ${gauge(m.rO05,"Over 0.5 rojas",C.red)}
+        ${gauge(m.rO15,"Over 1.5 rojas",C.red)}
+        <div style="font-size:10px;color:#ff8800;text-transform:uppercase;letter-spacing:1px;margin:10px 0 8px;border-bottom:1px solid #1e2d45;padding-bottom:4px">📋 TOTAL TARJETAS (amar+roja×2)</div>
+        ${gauge(m.tcO35,"Over 3.5 total",C.yellow)}
+        ${gauge(m.tcO45,"Over 4.5 total",C.yellow)}
+        ${gauge(m.tcO55,"Over 5.5 total",C.red)}
+        <div style="margin-top:10px;padding:7px 9px;background:#0b0f1a;border-radius:7px;font-size:10px;color:#546e7a;border-left:3px solid ${C.red}">
+          ${+m.avgY>=4?"⚠️ Partido físico — tarjetas Over recomendado":"✅ Disciplina razonable — considerar Under tarjetas"}
+          ${referee?`<br>⚖️ Árbitro: <strong style="color:#eceff1">${referee}</strong>`:""}
+        </div>
+      </div>
     </div>
   </div>
 
@@ -528,29 +667,81 @@ function calcMatch(s1,s2,t1,t2){
   const w1=Math.min(0.82,Math.max(0.10,0.40+edge/130));
   const dr=Math.min(0.35,Math.max(0.12,0.28-Math.abs(edge)/200));
   const w2=Math.max(0.08,1-w1-dr);
-  const avgC=+s1.corners+ +s2.corners,avgY=+s1.yellows+ +s2.yellows,avgR=(+s1.reds+ +s2.reds)*0.6;
-  const p0=Math.exp(-total),p1=total*Math.exp(-total);
-  const o15=1-p0-p1,o25=o15*(1-Math.exp(-Math.max(0,total-1.5))),o35=o25*0.52;
+
+  // ── CORNERS ─────────────────────────────────────────────────────────────
+  const c1=+s1.corners, c2=+s2.corners;
+  const avgC=c1+c2;
+  // corners por equipo: el más dominante ataca más
+  const c1share = c1/(c1+c2||1);
+  const teamC1=avgC*c1share, teamC2=avgC*(1-c1share);
+  // primera mitad ~ 42% del total, segunda ~ 58%
+  const avgC1H=avgC*0.42, avgC2H=avgC*0.58;
+
+  function cornProb(line,avg){return Math.min(0.92,Math.max(0.05,0.50+(avg-line)*0.065));}
+  // totales
+  const cO65=cornProb(6.5,avgC),cO75=cornProb(7.5,avgC),cO85=cornProb(8.5,avgC);
+  const cO95=cornProb(9.5,avgC),cO105=cornProb(10.5,avgC),cO115=cornProb(11.5,avgC),cO125=cornProb(12.5,avgC);
+  // por equipo t1
+  const t1cO25=cornProb(2.5,teamC1),t1cO35=cornProb(3.5,teamC1),t1cO45=cornProb(4.5,teamC1),t1cO55=cornProb(5.5,teamC1),t1cO65=cornProb(6.5,teamC1);
+  // por equipo t2
+  const t2cO25=cornProb(2.5,teamC2),t2cO35=cornProb(3.5,teamC2),t2cO45=cornProb(4.5,teamC2),t2cO55=cornProb(5.5,teamC2),t2cO65=cornProb(6.5,teamC2);
+  // primera mitad
+  const c1HO25=cornProb(2.5,avgC1H),c1HO35=cornProb(3.5,avgC1H),c1HO45=cornProb(4.5,avgC1H),c1HO55=cornProb(5.5,avgC1H);
+  // segunda mitad
+  const c2HO35=cornProb(3.5,avgC2H),c2HO45=cornProb(4.5,avgC2H),c2HO55=cornProb(5.5,avgC2H),c2HO65=cornProb(6.5,avgC2H);
+
+  // ── TARJETAS ─────────────────────────────────────────────────────────────
+  const avgY=+s1.yellows+ +s2.yellows, avgR=(+s1.reds+ +s2.reds)*0.6;
+  const y1=+s1.yellows, y2=+s2.yellows;
+  function cardProb(line,avg){return Math.min(0.92,Math.max(0.05,0.50+(avg-line)*0.12));}
+  // totales amarillas
+  const yO05=cardProb(0.5,avgY),yO15=cardProb(1.5,avgY),yO25=cardProb(2.5,avgY);
+  const yO35=cardProb(3.5,avgY),yO45=cardProb(4.5,avgY),yO55=cardProb(5.5,avgY),yO65=cardProb(6.5,avgY);
+  // por equipo
+  const t1yO05=cardProb(0.5,y1),t1yO15=cardProb(1.5,y1),t1yO25=cardProb(2.5,y1),t1yO35=cardProb(3.5,y1);
+  const t2yO05=cardProb(0.5,y2),t2yO15=cardProb(1.5,y2),t2yO25=cardProb(2.5,y2),t2yO35=cardProb(3.5,y2);
+  // rojas
+  const rO05=cardProb(0.5,avgR*2),rO15=cardProb(1.5,avgR*2);
+  // tarjetas totales (amar+rojas*2)
+  const totalCards=avgY+avgR*2;
+  const tcO35=cardProb(3.5,totalCards),tcO45=cardProb(4.5,totalCards),tcO55=cardProb(5.5,totalCards);
+
+  // ── GOLES ────────────────────────────────────────────────────────────────
+  const p0=Math.exp(-total),p1t=total*Math.exp(-total);
+  const o15=1-p0-p1t,o25=o15*(1-Math.exp(-Math.max(0,total-1.5))),o35=o25*0.52;
   const btts=(1-Math.exp(-xg1))*(1-Math.exp(-xg2));
-  const cO85=Math.min(0.82,Math.max(0.28,0.45+(avgC-9)*0.06));
-  const cO95=Math.min(0.75,Math.max(0.22,0.40+(avgC-9.5)*0.06));
-  const cO105=Math.min(0.70,Math.max(0.18,0.35+(avgC-10)*0.05));
-  const yO25=Math.min(0.85,Math.max(0.35,0.60+(avgY-3)*0.10));
-  const yO35=Math.min(0.78,Math.max(0.22,0.42+(avgY-3.8)*0.10));
-  const yO45=Math.min(0.65,Math.max(0.15,0.32+(avgY-4.5)*0.10));
-  // First half
   const fhg1=+s1.firstHalfGoals||xg1*0.42,fhg2=+s2.firstHalfGoals||xg2*0.42;
   const fhTotal=fhg1+fhg2;
-  const fhO05=1-Math.exp(-fhTotal);
-  const fhO15=fhO05*(1-Math.exp(-Math.max(0,fhTotal-0.5)));
-  // Handicap
+  const fhO05=1-Math.exp(-fhTotal),fhO15=fhO05*(1-Math.exp(-Math.max(0,fhTotal-0.5)));
   const hdp=edge>15?-0.5:edge<-15?0.5:0;
+
   return{
     xg1:xg1.toFixed(2),xg2:xg2.toFixed(2),total:total.toFixed(2),
     w1:(w1*100).toFixed(1),dr:(dr*100).toFixed(1),w2:(w2*100).toFixed(1),
-    avgC:avgC.toFixed(1),cO85:(cO85*100).toFixed(0),cO95:(cO95*100).toFixed(0),cO105:(cO105*100).toFixed(0),
-    avgY:avgY.toFixed(1),avgR:avgR.toFixed(2),
-    yO25:(yO25*100).toFixed(0),yO35:(yO35*100).toFixed(0),yO45:(yO45*100).toFixed(0),
+    // corners totales
+    avgC:avgC.toFixed(1),
+    cO65:(cO65*100).toFixed(0),cO75:(cO75*100).toFixed(0),cO85:(cO85*100).toFixed(0),
+    cO95:(cO95*100).toFixed(0),cO105:(cO105*100).toFixed(0),cO115:(cO115*100).toFixed(0),cO125:(cO125*100).toFixed(0),
+    // corners equipo 1
+    teamC1:teamC1.toFixed(1),t1cO25:(t1cO25*100).toFixed(0),t1cO35:(t1cO35*100).toFixed(0),t1cO45:(t1cO45*100).toFixed(0),t1cO55:(t1cO55*100).toFixed(0),t1cO65:(t1cO65*100).toFixed(0),
+    // corners equipo 2
+    teamC2:teamC2.toFixed(1),t2cO25:(t2cO25*100).toFixed(0),t2cO35:(t2cO35*100).toFixed(0),t2cO45:(t2cO45*100).toFixed(0),t2cO55:(t2cO55*100).toFixed(0),t2cO65:(t2cO65*100).toFixed(0),
+    // corners mitades
+    avgC1H:avgC1H.toFixed(1),avgC2H:avgC2H.toFixed(1),
+    c1HO25:(c1HO25*100).toFixed(0),c1HO35:(c1HO35*100).toFixed(0),c1HO45:(c1HO45*100).toFixed(0),c1HO55:(c1HO55*100).toFixed(0),
+    c2HO35:(c2HO35*100).toFixed(0),c2HO45:(c2HO45*100).toFixed(0),c2HO55:(c2HO55*100).toFixed(0),c2HO65:(c2HO65*100).toFixed(0),
+    // tarjetas totales
+    avgY:avgY.toFixed(1),avgR:avgR.toFixed(2),totalCards:totalCards.toFixed(1),
+    yO05:(yO05*100).toFixed(0),yO15:(yO15*100).toFixed(0),yO25:(yO25*100).toFixed(0),
+    yO35:(yO35*100).toFixed(0),yO45:(yO45*100).toFixed(0),yO55:(yO55*100).toFixed(0),yO65:(yO65*100).toFixed(0),
+    // tarjetas equipo 1
+    y1:y1.toFixed(1),t1yO05:(t1yO05*100).toFixed(0),t1yO15:(t1yO15*100).toFixed(0),t1yO25:(t1yO25*100).toFixed(0),t1yO35:(t1yO35*100).toFixed(0),
+    // tarjetas equipo 2
+    y2:y2.toFixed(1),t2yO05:(t2yO05*100).toFixed(0),t2yO15:(t2yO15*100).toFixed(0),t2yO25:(t2yO25*100).toFixed(0),t2yO35:(t2yO35*100).toFixed(0),
+    // rojas y totales
+    rO05:(rO05*100).toFixed(0),rO15:(rO15*100).toFixed(0),
+    tcO35:(tcO35*100).toFixed(0),tcO45:(tcO45*100).toFixed(0),tcO55:(tcO55*100).toFixed(0),
+    // goles
     o15:(o15*100).toFixed(1),o25:(o25*100).toFixed(1),o35:(o35*100).toFixed(1),btts:(btts*100).toFixed(1),
     xg1H:fhg1.toFixed(2),xg2H:fhg2.toFixed(2),o25H:(fhO15*100).toFixed(0),
     fhO05:(fhO05*100).toFixed(0),fhO15:(fhO15*100).toFixed(0),
@@ -746,14 +937,29 @@ function updateCartera(){
 
 function removeSaved(i){state.saved.splice(i,1);localStorage.setItem("saved_picks",JSON.stringify(state.saved));updateCartera();}
 
-function saveKey(){
-  const val=document.getElementById("api-key-input").value.trim();
-  if(!val.startsWith("gsk_")){alert("La key debe empezar con gsk_\nVe a console.groq.com");return;}
-  localStorage.setItem("groq_key",val);
-  document.getElementById("key-status").style.display="block";
-  document.getElementById("key-status").textContent="✓ API key guardada";
-  hideWarn();setTimeout(()=>switchTab("analisis"),1000);
+function saveKeys(){
+  const groqVal=document.getElementById("api-key-input").value.trim();
+  const tavilyVal=document.getElementById("tavily-key-input").value.trim();
+  let saved=false;
+  if(groqVal){
+    if(!groqVal.startsWith("gsk_")){alert("La key de Groq debe empezar con gsk_");return;}
+    localStorage.setItem("groq_key",groqVal);
+    document.getElementById("key-status").style.display="block";
+    document.getElementById("key-status").textContent="✓ Groq guardada";
+    saved=true;
+  }
+  if(tavilyVal){
+    if(!tavilyVal.startsWith("tvly-")){alert("La key de Tavily debe empezar con tvly-");return;}
+    localStorage.setItem("tavily_key",tavilyVal);
+    document.getElementById("tavily-status").style.display="block";
+    document.getElementById("tavily-status").textContent="✓ Tavily guardada — búsqueda web activada 🔍";
+    saved=true;
+  }
+  if(saved){hideWarn();setTimeout(()=>switchTab("analisis"),1200);}
 }
+function saveKey(){saveKeys();}
+function toggleTavilyKey(){const i=document.getElementById("tavily-key-input");i.type=i.type==="password"?"text":"password";document.getElementById("toggle-tavily-btn").textContent=i.type==="password"?"👁":"🙈";}
+
 function toggleKey(){const i=document.getElementById("api-key-input");i.type=i.type==="password"?"text":"password";document.getElementById("toggle-btn").textContent=i.type==="password"?"👁":"🙈";}
 function showWarn(){document.getElementById("no-api-warn").style.display="block";}
 function hideWarn(){document.getElementById("no-api-warn").style.display="none";}
