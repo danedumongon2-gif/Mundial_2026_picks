@@ -441,18 +441,41 @@ async function fetchTeam(teamName){
     CAF:{rank:100,form:1.5,gs:1.2,gc:1.3,corners:4.6,yellows:2.3,reds:0.11,att:60,def:58},
     OFC:{rank:150,form:1.4,gs:1.2,gc:1.4,corners:4.3,yellows:2.0,reds:0.09,att:55,def:55},
   };
-  const cf=parsed.confederation||"UEFA";
+  // Use base stats as anchor to detect and fix bad data
+  const base=TEAM_BASE[teamName];
+  const cf=parsed.confederation||base?.confederation||"UEFA";
   const dv=confDefaults[cf]||confDefaults.UEFA;
+
+  // If we have base stats, use them to sanity-check Claude's output
+  // For rank: if Claude's answer is >2x off from base, use base
   const clamp=(v,mn,mx,fb)=>v!=null?Math.min(mx,Math.max(mn,parseFloat(v))):fb;
-  parsed.rank=clamp(parsed.rank,1,211,dv.rank);
-  parsed.form=clamp(parsed.form,0,3,dv.form);
-  parsed.gs=clamp(parsed.gs,0.1,6,dv.gs);
-  parsed.gc=clamp(parsed.gc,0.1,6,dv.gc);
-  parsed.corners=clamp(parsed.corners,2,12,dv.corners);
-  parsed.yellows=clamp(parsed.yellows,0.3,6,dv.yellows);
-  parsed.reds=clamp(parsed.reds,0,1,dv.reds);
-  parsed.att=clamp(parsed.att,1,100,dv.att);
-  parsed.def=clamp(parsed.def,1,100,dv.def);
+
+  if(base){
+    // Rank: accept Claude if within reasonable range, else use base
+    const rawRank=parseInt(parsed.rank);
+    parsed.rank=(!isNaN(rawRank)&&rawRank>=1&&rawRank<=211&&Math.abs(rawRank-base.rank)<40)?rawRank:base.rank;
+    // Goals: accept Claude if within 1.0 of base, else use base
+    const rawGs=parseFloat(parsed.gs);
+    parsed.gs=(!isNaN(rawGs)&&Math.abs(rawGs-base.gs)<1.2)?clamp(rawGs,0.1,6,base.gs):base.gs;
+    const rawGc=parseFloat(parsed.gc);
+    parsed.gc=(!isNaN(rawGc)&&Math.abs(rawGc-base.gc)<1.2)?clamp(rawGc,0.1,6,base.gc):base.gc;
+    // Corners/cards: use base as default, accept Claude if reasonable
+    parsed.corners=clamp(parsed.corners,2,12,base.corners);
+    parsed.yellows=clamp(parsed.yellows,0.3,6,base.yellows);
+    parsed.reds=clamp(parsed.reds,0,1,base.reds);
+    parsed.att=clamp(parsed.att,1,100,base.att);
+    parsed.def=clamp(parsed.def,1,100,base.def);
+    parsed.confederation=base.confederation;
+  } else {
+    parsed.rank=clamp(parsed.rank,1,211,dv.rank);
+    parsed.gs=clamp(parsed.gs,0.1,6,dv.gs);
+    parsed.gc=clamp(parsed.gc,0.1,6,dv.gc);
+    parsed.corners=clamp(parsed.corners,2,12,dv.corners);
+    parsed.yellows=clamp(parsed.yellows,0.3,6,dv.yellows);
+    parsed.reds=clamp(parsed.reds,0,1,dv.reds);
+    parsed.att=clamp(parsed.att,1,100,dv.att);
+    parsed.def=clamp(parsed.def,1,100,dv.def);
+  }
   parsed.firstHalfGoals=clamp(parsed.firstHalfGoals,0.1,4,parsed.gs*0.42);
   const sd={UEFA:13,CONMEBOL:12,CONCACAF:11,AFC:11,CAF:10,OFC:10};
   const so={UEFA:4.5,CONMEBOL:4.2,CONCACAF:3.8,AFC:3.8,CAF:3.5,OFC:3.3};
@@ -869,7 +892,57 @@ function buildPicks(m,t1,t2,d1,d2){
   return list.filter(p=>p.conf>40).sort((a,b)=>b.conf-a.conf);
 }
 
-// Convert probability to American odds
+// Base stats for known teams - used as fallback/validation reference
+const TEAM_BASE={
+  "Mexico":{rank:15,gs:1.6,gc:0.9,corners:5.2,yellows:2.1,reds:0.08,att:72,def:71,confederation:"CONCACAF"},
+  "South Africa":{rank:67,gs:1.1,gc:1.3,corners:4.1,yellows:2.4,reds:0.12,att:58,def:55,confederation:"CAF"},
+  "South Korea":{rank:22,gs:1.5,gc:1.1,corners:5.5,yellows:1.9,reds:0.08,att:70,def:65,confederation:"AFC"},
+  "Czech Republic":{rank:37,gs:1.4,gc:1.2,corners:5.0,yellows:2.0,reds:0.09,att:66,def:64,confederation:"UEFA"},
+  "Canada":{rank:43,gs:1.3,gc:1.0,corners:4.8,yellows:1.8,reds:0.07,att:65,def:68,confederation:"CONCACAF"},
+  "Bosnia Herzegovina":{rank:62,gs:1.2,gc:1.3,corners:4.5,yellows:2.2,reds:0.12,att:60,def:57,confederation:"UEFA"},
+  "Qatar":{rank:58,gs:1.0,gc:1.4,corners:4.2,yellows:2.0,reds:0.10,att:55,def:54,confederation:"AFC"},
+  "Switzerland":{rank:19,gs:1.6,gc:0.8,corners:5.1,yellows:1.7,reds:0.06,att:71,def:74,confederation:"UEFA"},
+  "Brazil":{rank:5,gs:2.1,gc:0.6,corners:6.2,yellows:1.6,reds:0.08,att:88,def:84,confederation:"CONMEBOL"},
+  "Morocco":{rank:14,gs:1.3,gc:0.7,corners:4.8,yellows:2.3,reds:0.10,att:68,def:78,confederation:"CAF"},
+  "Haiti":{rank:91,gs:0.9,gc:1.6,corners:3.8,yellows:2.5,reds:0.18,att:48,def:44,confederation:"CONCACAF"},
+  "Scotland":{rank:39,gs:1.4,gc:1.1,corners:5.3,yellows:1.9,reds:0.09,att:65,def:63,confederation:"UEFA"},
+  "USA":{rank:11,gs:1.7,gc:0.9,corners:5.4,yellows:1.8,reds:0.07,att:74,def:73,confederation:"CONCACAF"},
+  "Paraguay":{rank:53,gs:1.2,gc:1.2,corners:4.5,yellows:2.3,reds:0.13,att:60,def:60,confederation:"CONMEBOL"},
+  "Australia":{rank:23,gs:1.4,gc:1.1,corners:5.0,yellows:2.0,reds:0.09,att:66,def:65,confederation:"AFC"},
+  "Turkey":{rank:26,gs:1.5,gc:1.1,corners:5.2,yellows:2.2,reds:0.11,att:69,def:66,confederation:"UEFA"},
+  "Germany":{rank:13,gs:1.9,gc:0.9,corners:6.0,yellows:1.7,reds:0.07,att:82,def:76,confederation:"UEFA"},
+  "Curacao":{rank:78,gs:1.0,gc:1.5,corners:3.9,yellows:2.3,reds:0.14,att:50,def:47,confederation:"CONCACAF"},
+  "Ivory Coast":{rank:48,gs:1.3,gc:1.2,corners:4.6,yellows:2.2,reds:0.12,att:62,def:59,confederation:"CAF"},
+  "Ecuador":{rank:44,gs:1.4,gc:1.1,corners:4.9,yellows:2.1,reds:0.10,att:65,def:63,confederation:"CONMEBOL"},
+  "Netherlands":{rank:7,gs:1.9,gc:0.7,corners:6.1,yellows:1.8,reds:0.07,att:84,def:82,confederation:"UEFA"},
+  "Japan":{rank:16,gs:1.6,gc:0.9,corners:5.5,yellows:1.5,reds:0.05,att:73,def:72,confederation:"AFC"},
+  "Sweden":{rank:25,gs:1.5,gc:1.0,corners:5.2,yellows:1.9,reds:0.08,att:69,def:68,confederation:"UEFA"},
+  "Tunisia":{rank:34,gs:1.2,gc:1.0,corners:4.7,yellows:2.1,reds:0.10,att:63,def:65,confederation:"CAF"},
+  "Belgium":{rank:3,gs:2.0,gc:0.8,corners:5.9,yellows:1.7,reds:0.07,att:86,def:80,confederation:"UEFA"},
+  "Egypt":{rank:30,gs:1.3,gc:1.0,corners:4.6,yellows:2.0,reds:0.09,att:64,def:66,confederation:"CAF"},
+  "Iran":{rank:22,gs:1.2,gc:0.9,corners:4.5,yellows:2.1,reds:0.10,att:62,def:70,confederation:"AFC"},
+  "New Zealand":{rank:98,gs:0.9,gc:1.5,corners:4.0,yellows:2.0,reds:0.10,att:48,def:50,confederation:"OFC"},
+  "Spain":{rank:1,gs:2.2,gc:0.5,corners:6.8,yellows:1.5,reds:0.06,att:92,def:88,confederation:"UEFA"},
+  "Cape Verde":{rank:82,gs:1.0,gc:1.4,corners:3.8,yellows:2.3,reds:0.15,att:50,def:48,confederation:"CAF"},
+  "Saudi Arabia":{rank:56,gs:1.1,gc:1.2,corners:4.3,yellows:2.1,reds:0.10,att:57,def:58,confederation:"AFC"},
+  "Uruguay":{rank:17,gs:1.6,gc:0.8,corners:5.3,yellows:2.4,reds:0.13,att:73,def:76,confederation:"CONMEBOL"},
+  "France":{rank:2,gs:2.1,gc:0.7,corners:6.4,yellows:1.6,reds:0.07,att:90,def:86,confederation:"UEFA"},
+  "Senegal":{rank:18,gs:1.5,gc:0.9,corners:5.0,yellows:2.1,reds:0.10,att:70,def:71,confederation:"CAF"},
+  "Iraq":{rank:63,gs:1.1,gc:1.3,corners:4.2,yellows:2.3,reds:0.13,att:56,def:53,confederation:"AFC"},
+  "Norway":{rank:20,gs:1.8,gc:1.0,corners:5.6,yellows:1.8,reds:0.08,att:77,def:70,confederation:"UEFA"},
+  "Argentina":{rank:6,gs:2.0,gc:0.7,corners:5.8,yellows:1.9,reds:0.09,att:89,def:83,confederation:"CONMEBOL"},
+  "Algeria":{rank:41,gs:1.3,gc:1.1,corners:4.7,yellows:2.2,reds:0.11,att:63,def:62,confederation:"CAF"},
+  "Austria":{rank:28,gs:1.5,gc:1.0,corners:5.1,yellows:1.9,reds:0.08,att:68,def:67,confederation:"UEFA"},
+  "Jordan":{rank:75,gs:1.0,gc:1.4,corners:4.0,yellows:2.2,reds:0.12,att:52,def:50,confederation:"AFC"},
+  "Portugal":{rank:8,gs:2.0,gc:0.8,corners:6.2,yellows:1.8,reds:0.08,att:87,def:79,confederation:"UEFA"},
+  "DR Congo":{rank:52,gs:1.2,gc:1.2,corners:4.4,yellows:2.3,reds:0.13,att:60,def:59,confederation:"CAF"},
+  "Uzbekistan":{rank:74,gs:1.1,gc:1.3,corners:4.2,yellows:2.0,reds:0.10,att:55,def:55,confederation:"AFC"},
+  "Colombia":{rank:24,gs:1.6,gc:1.0,corners:5.3,yellows:2.2,reds:0.11,att:71,def:69,confederation:"CONMEBOL"},
+  "England":{rank:4,gs:1.9,gc:0.7,corners:6.3,yellows:1.6,reds:0.06,att:85,def:83,confederation:"UEFA"},
+  "Croatia":{rank:9,gs:1.5,gc:0.8,corners:5.4,yellows:2.0,reds:0.09,att:75,def:78,confederation:"UEFA"},
+  "Ghana":{rank:61,gs:1.2,gc:1.3,corners:4.5,yellows:2.2,reds:0.12,att:60,def:57,confederation:"CAF"},
+  "Panama":{rank:69,gs:1.0,gc:1.3,corners:4.1,yellows:2.8,reds:0.16,att:52,def:54,confederation:"CONCACAF"},
+};
 function probToAmerican(prob){
   const p=prob/100;
   if(p>=0.5) return Math.round(-p/(1-p)*100);
