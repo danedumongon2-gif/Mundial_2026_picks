@@ -366,10 +366,10 @@ async function fetchTeam(teamName){
   const isT1=teamName===document.getElementById("team1-select").value;
   const injuriesNote=isT1&&injuries1?` Known absences: ${injuries1}.`:!isT1&&injuries2?` Known absences: ${injuries2}.`:"";
 
-  const prompt=`Search the web for current real statistics for the ${teamName} national football team from 2024 and 2025. Find their FIFA ranking, recent match results, goals scored and conceded per game, form, key players, corners and cards averages.${injuriesNote}
+  const prompt=`Search the web for current real statistics for the ${teamName} national football team from 2024 and 2025. Find their FIFA ranking, recent match results, goals scored and conceded per game, shots per game, shots on target per game, corners, cards averages, key players and current form.${injuriesNote}
 
 Return ONLY a valid JSON object, no markdown, no explanation:
-{"rank":<current FIFA ranking integer>,"form":<avg points per game last 10 matches 0.0-3.0>,"gs":<avg goals scored per match>,"gc":<avg goals conceded per match>,"corners":<avg corners per match>,"yellows":<avg yellow cards per match>,"reds":<avg red cards per match>,"att":<attack strength 0-100>,"def":<defense strength 0-100>,"confederation":"UEFA|CONMEBOL|CONCACAF|AFC|CAF|OFC","last5":["W 2-0 vs Netherlands","D 1-1 vs Brazil","L 0-1 vs Spain","W 1-0 vs Morocco","W 3-1 vs Senegal"],"keyPlayers":["Player1","Player2","Player3"],"firstHalfGoals":<avg goals first half>,"notes":"current form summary with real recent results and any key news","dataQuality":"web_verified"}`;
+{"rank":<current FIFA ranking integer>,"form":<avg points per game last 10 matches 0.0-3.0>,"gs":<avg goals scored per match>,"gc":<avg goals conceded per match>,"shots":<avg total shots per match>,"shotsOnTarget":<avg shots on target per match>,"shotsAgainst":<avg shots conceded per match>,"shotsOnTargetAgainst":<avg shots on target conceded per match>,"corners":<avg corners per match>,"yellows":<avg yellow cards per match>,"reds":<avg red cards per match>,"att":<attack strength 0-100>,"def":<defense strength 0-100>,"confederation":"UEFA|CONMEBOL|CONCACAF|AFC|CAF|OFC","last5":["W 2-0 vs Netherlands","D 1-1 vs Brazil","L 0-1 vs Spain","W 1-0 vs Morocco","W 3-1 vs Senegal"],"keyPlayers":["Player1","Player2","Player3"],"firstHalfGoals":<avg goals first half>,"notes":"current form summary with real recent results and any key news","dataQuality":"web_verified"}`;
 
   const res=await fetch("https://api.anthropic.com/v1/messages",{
     method:"POST",
@@ -422,6 +422,13 @@ Return ONLY a valid JSON object, no markdown, no explanation:
   parsed.att=parsed.att!=null?Math.min(100,Math.max(1,parseInt(parsed.att))):def.att;
   parsed.def=parsed.def!=null?Math.min(100,Math.max(1,parseInt(parsed.def))):def.def;
   parsed.firstHalfGoals=parsed.firstHalfGoals!=null?parseFloat(parsed.firstHalfGoals):parsed.gs*0.42;
+  // Shots validation — defaults based on confederation averages
+  const shotsDef={UEFA:13,CONMEBOL:12,CONCACAF:11,AFC:11,CAF:10,OFC:10};
+  const sotDef={UEFA:4.5,CONMEBOL:4.2,CONCACAF:3.8,AFC:3.8,CAF:3.5,OFC:3.3};
+  parsed.shots=parsed.shots!=null?Math.min(25,Math.max(3,parseFloat(parsed.shots))):shotsDef[conf]||12;
+  parsed.shotsOnTarget=parsed.shotsOnTarget!=null?Math.min(12,Math.max(1,parseFloat(parsed.shotsOnTarget))):sotDef[conf]||4;
+  parsed.shotsAgainst=parsed.shotsAgainst!=null?Math.min(25,Math.max(3,parseFloat(parsed.shotsAgainst))):shotsDef[conf]||12;
+  parsed.shotsOnTargetAgainst=parsed.shotsOnTargetAgainst!=null?Math.min(12,Math.max(1,parseFloat(parsed.shotsOnTargetAgainst))):sotDef[conf]||4;
   if(!Array.isArray(parsed.last5))parsed.last5=[];
   if(!Array.isArray(parsed.keyPlayers))parsed.keyPlayers=[];
   parsed.dataQuality="web_verified";
@@ -488,6 +495,12 @@ function renderTeamCard(id,name,data,loading,error,color){
       <div class="stat-box" style="border:1px solid ${C.yellow}33"><div class="stat-val" style="color:${C.yellow}">${data.yellows}</div><div class="stat-lbl">Amar.</div></div>
       <div class="stat-box" style="border:1px solid ${C.red}33"><div class="stat-val" style="color:${C.red}">${data.reds||0}</div><div class="stat-lbl">Rojas</div></div>
       <div class="stat-box" style="border:1px solid ${C.blue}33"><div class="stat-val" style="color:${C.blue}">${data.firstHalfGoals||"?"}</div><div class="stat-lbl">G 1T</div></div>
+    </div>
+    <div style="display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap">
+      <div class="stat-box" style="border:1px solid #ff880033"><div class="stat-val" style="color:#ff8800;font-size:16px">${data.shots||"?"}</div><div class="stat-lbl">Remates/PJ</div></div>
+      <div class="stat-box" style="border:1px solid #ff880033"><div class="stat-val" style="color:#ff8800;font-size:16px">${data.shotsOnTarget||"?"}</div><div class="stat-lbl">A puerta/PJ</div></div>
+      <div class="stat-box" style="border:1px solid #54607a33"><div class="stat-val" style="color:#546e7a;font-size:16px">${data.shotsAgainst||"?"}</div><div class="stat-lbl">Rem. recib.</div></div>
+      <div class="stat-box" style="border:1px solid #54607a33"><div class="stat-val" style="color:#546e7a;font-size:16px">${data.shotsOnTargetAgainst||"?"}</div><div class="stat-lbl">A puerta rec.</div></div>
     </div>
     ${last5?`<div style="margin-bottom:8px"><div style="font-size:9px;color:#546e7a;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">ÚLTIMOS 5</div><div style="display:flex;gap:3px;flex-wrap:wrap">${last5}</div></div>`:""}
     ${players?`<div style="margin-bottom:8px"><div style="font-size:9px;color:#546e7a;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">CLAVE</div><div style="display:flex;gap:3px;flex-wrap:wrap">${players}</div></div>`:""}
@@ -649,6 +662,47 @@ function renderAnalysis(m,d1,d2,t1,t2){
     </div>
   </div>
 
+  <div class="card" style="grid-column:1/-1">
+    <div class="section-title" style="font-size:15px;color:#ff8800">🎯 REMATES — ANÁLISIS COMPLETO</div>
+    <div style="display:flex;gap:5px;margin-bottom:14px;flex-wrap:wrap">
+      <div class="stat-box" style="border:1px solid #ff880033"><div class="stat-val" style="color:#ff8800">${(+d1.shots+ +d2.shots).toFixed(1)}</div><div class="stat-lbl">Total rem./PJ</div></div>
+      <div class="stat-box" style="border:1px solid #ff880033"><div class="stat-val" style="color:#ff8800">${(+d1.shotsOnTarget+ +d2.shotsOnTarget).toFixed(1)}</div><div class="stat-lbl">Total a puerta</div></div>
+      <div class="stat-box" style="border:1px solid ${C.blue}33"><div class="stat-val" style="color:${C.blue}">${d1.shots||"?"}</div><div class="stat-lbl">${t1.split(" ")[0]} rem.</div></div>
+      <div class="stat-box" style="border:1px solid ${C.blue}33"><div class="stat-val" style="color:${C.blue}">${d1.shotsOnTarget||"?"}</div><div class="stat-lbl">${t1.split(" ")[0]} puerta</div></div>
+      <div class="stat-box" style="border:1px solid ${C.red}33"><div class="stat-val" style="color:${C.red}">${d2.shots||"?"}</div><div class="stat-lbl">${t2.split(" ")[0]} rem.</div></div>
+      <div class="stat-box" style="border:1px solid ${C.red}33"><div class="stat-val" style="color:${C.red}">${d2.shotsOnTarget||"?"}</div><div class="stat-lbl">${t2.split(" ")[0]} puerta</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div>
+        <div style="font-size:10px;color:${C.blue};text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid #1e2d45;padding-bottom:4px">🔵 ${t1} — REMATES</div>
+        <div style="display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap">
+          <div class="stat-box" style="border:1px solid ${C.blue}33"><div class="stat-val" style="color:${C.blue};font-size:16px">${d1.shots||"?"}</div><div class="stat-lbl">Remates/PJ</div></div>
+          <div class="stat-box" style="border:1px solid ${C.blue}33"><div class="stat-val" style="color:${C.blue};font-size:16px">${d1.shotsOnTarget||"?"}</div><div class="stat-lbl">A puerta/PJ</div></div>
+          <div class="stat-box" style="border:1px solid #54607a33"><div class="stat-val" style="color:#546e7a;font-size:16px">${d1.shotsAgainst||"?"}</div><div class="stat-lbl">Rec./PJ</div></div>
+          <div class="stat-box" style="border:1px solid #54607a33"><div class="stat-val" style="color:#546e7a;font-size:16px">${d1.shotsOnTargetAgainst||"?"}</div><div class="stat-lbl">Rec. puerta</div></div>
+        </div>
+        <div style="font-size:10px;color:#546e7a;background:#0b0f1a;border-radius:7px;padding:7px 9px;border-left:3px solid ${C.blue}">
+          Precisión: ${d1.shots&&d1.shotsOnTarget?(+d1.shotsOnTarget/+d1.shots*100).toFixed(0)+"%":"?"} de remates van a puerta
+        </div>
+      </div>
+      <div>
+        <div style="font-size:10px;color:${C.red};text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid #1e2d45;padding-bottom:4px">🔴 ${t2} — REMATES</div>
+        <div style="display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap">
+          <div class="stat-box" style="border:1px solid ${C.red}33"><div class="stat-val" style="color:${C.red};font-size:16px">${d2.shots||"?"}</div><div class="stat-lbl">Remates/PJ</div></div>
+          <div class="stat-box" style="border:1px solid ${C.red}33"><div class="stat-val" style="color:${C.red};font-size:16px">${d2.shotsOnTarget||"?"}</div><div class="stat-lbl">A puerta/PJ</div></div>
+          <div class="stat-box" style="border:1px solid #54607a33"><div class="stat-val" style="color:#546e7a;font-size:16px">${d2.shotsAgainst||"?"}</div><div class="stat-lbl">Rec./PJ</div></div>
+          <div class="stat-box" style="border:1px solid #54607a33"><div class="stat-val" style="color:#546e7a;font-size:16px">${d2.shotsOnTargetAgainst||"?"}</div><div class="stat-lbl">Rec. puerta</div></div>
+        </div>
+        <div style="font-size:10px;color:#546e7a;background:#0b0f1a;border-radius:7px;padding:7px 9px;border-left:3px solid ${C.red}">
+          Precisión: ${d2.shots&&d2.shotsOnTarget?(+d2.shotsOnTarget/+d2.shots*100).toFixed(0)+"%":"?"} de remates van a puerta
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:12px;padding:9px 11px;background:#0b0f1a;border-radius:8px;font-size:10px;color:#546e7a;border-left:3px solid #ff8800">
+      💡 ${+d1.shotsOnTarget>+d2.shotsOnTarget?`${t1} más peligroso — ${d1.shotsOnTarget} remates a puerta vs ${d2.shotsOnTarget} de ${t2}`:+d2.shotsOnTarget>+d1.shotsOnTarget?`${t2} más peligroso — ${d2.shotsOnTarget} remates a puerta vs ${d1.shotsOnTarget} de ${t1}`:`Ambos equipos similares en remates a puerta`}
+    </div>
+  </div>
+
   ${venue||weather!=="normal"||referee?`<div class="card" style="grid-column:1/-1">
     <div class="section-title" style="font-size:15px;color:#00e676">🏟️ FACTORES EXTERNOS</div>
     <div style="display:flex;flex-direction:column;gap:7px">
@@ -782,6 +836,23 @@ function buildPicks(m,t1,t2,d1,d2){
   return list.filter(p=>p.conf>40).sort((a,b)=>b.conf-a.conf);
 }
 
+// Convert probability to American odds
+function probToAmerican(prob){
+  const p=prob/100;
+  if(p>=0.5) return Math.round(-p/(1-p)*100);
+  else return Math.round((1-p)/p*100);
+}
+// Convert decimal odds to American
+function decimalToAmerican(dec){
+  if(dec>=2) return "+"+(Math.round((dec-1)*100));
+  else return ""+Math.round(-100/(dec-1));
+}
+// Fair value odds label
+function fairOdds(conf){
+  const am=probToAmerican(conf);
+  return am>0?`+${am}`:am.toString();
+}
+
 function renderPicksTab(m,picks,t1,t2,d1,d2){
   document.getElementById("picks-match-label").textContent=`${t1} vs ${t2}`;
   const mainPicks=picks.filter(p=>p.cat==="resultado"||p.cat==="goles");
@@ -789,15 +860,19 @@ function renderPicksTab(m,picks,t1,t2,d1,d2){
   const handicap=picks.filter(p=>p.cat==="handicap");
   const others=picks.filter(p=>p.cat==="corners"||p.cat==="tarjetas");
 
-  function pickHtml(p,i){
+  function pickHtml(p){
     const cl=p.conf>=72?C.green:p.conf>=56?C.yellow:C.red;
     const allPicks=[...mainPicks,...firstHalf,...handicap,...others];
     const realI=allPicks.indexOf(p);
+    const am=fairOdds(p.conf);
     return`<div class="pick-row" style="background:${cl}0d;border:1px solid ${cl}33">
       <div style="flex:1">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;flex-wrap:wrap;gap:4px">
           <span style="color:#eceff1;font-weight:700;font-size:12px">✦ ${p.pick}</span>
-          <span style="color:${cl};font-size:11px;font-weight:700;background:${cl}22;border-radius:6px;padding:2px 7px">${Math.round(p.conf)}%</span>
+          <div style="display:flex;gap:5px;align-items:center">
+            <span style="color:#546e7a;font-size:10px;background:#0b0f1a;border-radius:5px;padding:2px 7px;font-family:monospace">${am}</span>
+            <span style="color:${cl};font-size:11px;font-weight:700;background:${cl}22;border-radius:6px;padding:2px 7px">${Math.round(p.conf)}%</span>
+          </div>
         </div>
         <div style="color:#546e7a;font-size:10px">${p.rationale}</div>
       </div>
@@ -817,21 +892,65 @@ function renderValorTab(){
   document.getElementById("valor-empty").style.display="none";
   document.getElementById("valor-picks-list").innerHTML=state.picks.slice(0,8).map((p,i)=>{
     const cl=p.conf>=72?C.green:p.conf>=56?C.yellow:C.red;
+    const am=fairOdds(p.conf);
     return`<div style="background:#0b0f1a;border:1px solid #1e2d45;border-radius:10px;padding:11px 13px;margin-bottom:9px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:4px">
         <span style="font-size:12px;font-weight:700;color:#eceff1">✦ ${p.pick}</span>
-        <span style="color:${cl};font-size:11px;font-weight:700">${Math.round(p.conf)}%</span>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span style="color:#546e7a;font-size:11px">Cuota justa:</span>
+          <span style="color:#ffc107;font-size:13px;font-weight:900;font-family:monospace">${am}</span>
+          <span style="color:${cl};font-size:11px;font-weight:700">${Math.round(p.conf)}%</span>
+        </div>
       </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <input class="input-field" id="odds-${i}" placeholder="Cuota (ej: 1.85)" type="number" step="0.01" style="flex:1;font-size:12px;padding:7px 9px" oninput="calcEV(${i},${p.conf})"/>
-        <div id="ev-${i}" style="min-width:80px;text-align:center;font-size:12px;font-weight:700;color:#546e7a">EV: —</div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+        <div style="flex:1">
+          <div style="font-size:9px;color:#546e7a;margin-bottom:3px">CUOTA AMERICANA (+/-)</div>
+          <input class="input-field" id="odds-am-${i}" placeholder="+150 o -120" style="font-size:13px;padding:7px 9px;font-family:monospace" oninput="calcEVAmerican(${i},${p.conf})"/>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:9px;color:#546e7a;margin-bottom:3px">CUOTA DECIMAL</div>
+          <input class="input-field" id="odds-dec-${i}" placeholder="1.85" type="number" step="0.01" style="font-size:13px;padding:7px 9px" oninput="calcEVDecimal(${i},${p.conf})"/>
+        </div>
       </div>
+      <div id="ev-${i}" style="font-size:12px;font-weight:700;color:#546e7a;padding:6px 9px;background:#0d1117;border-radius:7px">EV: ingresa la cuota de tu casa de apuestas</div>
     </div>`;
   }).join("");
 }
 
+function showEV(i,decimal,conf){
+  const el=document.getElementById(`ev-${i}`);
+  if(!el)return;
+  if(isNaN(decimal)||decimal<=1){el.textContent="EV: ingresa la cuota de tu casa de apuestas";el.style.color="#546e7a";return;}
+  const prob=conf/100;
+  const ev=((prob*decimal)-1)*100;
+  const badge=ev>=8?"🔥 GRAN VALOR":ev>=0?"✅ CON VALOR":"❌ SIN VALOR";
+  el.textContent=`${badge}  EV: ${ev>=0?"+":""}${ev.toFixed(1)}%  (Cuota justa: ${fairOdds(conf)})`;
+  el.style.color=ev>=5?C.green:ev>=0?C.yellow:C.red;
+}
+
+function calcEVAmerican(i,conf){
+  const raw=document.getElementById(`odds-am-${i}`)?.value?.trim();
+  if(!raw)return;
+  const num=parseFloat(raw);
+  if(isNaN(num))return;
+  const decimal=num>0?(num/100)+1:(100/Math.abs(num))+1;
+  // Sync decimal field
+  const decEl=document.getElementById(`odds-dec-${i}`);
+  if(decEl&&!decEl.value)decEl.value=decimal.toFixed(2);
+  showEV(i,decimal,conf);
+}
+
+function calcEVDecimal(i,conf){
+  const dec=parseFloat(document.getElementById(`odds-dec-${i}`)?.value);
+  if(isNaN(dec))return;
+  // Sync american field
+  const amEl=document.getElementById(`odds-am-${i}`);
+  if(amEl&&!amEl.value){const am=decimalToAmerican(dec);amEl.value=am>0?`+${am}`:am;}
+  showEV(i,dec,conf);
+}
+
 function calcEV(i,conf){
-  const odds=parseFloat(document.getElementById(`odds-${i}`).value);
+  const odds=parseFloat(document.getElementById(`odds-${i}`)?.value);
   const el=document.getElementById(`ev-${i}`);
   if(isNaN(odds)||odds<=1){el.textContent="EV: —";el.style.color="#546e7a";return;}
   const prob=conf/100;
@@ -927,8 +1046,11 @@ function updateCartera(){
         </div>
       </div>
       <div style="font-weight:700;font-size:12px;color:#eceff1;margin-bottom:2px">✦ ${p.pick}</div>
-      <div style="font-size:10px;color:#546e7a;margin-bottom:5px">${p.rationale}</div>
-      <span style="font-size:12px;font-weight:700;color:${cl}">${p.conf}% confianza</span>
+        <div style="font-size:10px;color:#546e7a;margin-bottom:5px">${p.rationale}</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span style="font-size:12px;font-weight:700;color:${cl}">${p.conf}% confianza</span>
+          <span style="font-size:11px;font-family:monospace;color:#ffc107;background:#ffc10722;border-radius:5px;padding:1px 7px">${fairOdds(p.conf)}</span>
+        </div>
     </div>`;
   }).join("");
   const avg=Math.round(state.saved.reduce((a,b)=>a+b.conf,0)/count);
