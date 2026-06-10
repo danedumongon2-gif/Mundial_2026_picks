@@ -263,32 +263,6 @@ select{appearance:none;-webkit-appearance:none}
     <button onclick="saveKeys()" class="primary-btn">GUARDAR API KEY</button>
     <div id="key-status" style="display:none;margin-top:10px;font-size:12px;color:#00e676;text-align:center;font-weight:700"></div>
   </div>
-      <div style="font-size:11px;color:#546e7a;margin-bottom:8px">Consíguela en <strong style="color:#448aff">tavily.com</strong> → Overview → API Key</div>
-      <div style="display:flex;gap:8px">
-        <input type="password" id="tavily-key-input" class="input-field" placeholder="tvly-..." style="font-family:monospace"/>
-        <button onclick="toggleTavilyKey()" id="toggle-tavily-btn" style="background:#0b0f1a;border:1px solid #1e2d45;border-radius:8px;color:#546e7a;cursor:pointer;padding:0 12px;font-size:14px;flex-shrink:0">👁</button>
-      </div>
-      <div id="tavily-status" style="display:none;margin-top:6px;font-size:11px;color:#00e676;font-weight:700"></div>
-    </div>
-
-    <div style="margin-bottom:16px">
-      <div style="font-size:11px;color:#ffc107;font-weight:700;margin-bottom:4px">🤖 GROQ (análisis AI — gratis)</div>
-      <div style="font-size:11px;color:#546e7a;margin-bottom:8px">Consíguela en <strong style="color:#448aff">console.groq.com</strong> → API Keys</div>
-      <div style="display:flex;gap:8px">
-        <input type="password" id="api-key-input" class="input-field" placeholder="gsk_..." style="font-family:monospace"/>
-        <button onclick="toggleKey()" id="toggle-btn" style="background:#0b0f1a;border:1px solid #1e2d45;border-radius:8px;color:#546e7a;cursor:pointer;padding:0 12px;font-size:14px;flex-shrink:0">👁</button>
-      </div>
-      <div id="key-status" style="display:none;margin-top:6px;font-size:11px;color:#00e676;font-weight:700"></div>
-    </div>
-
-    <button onclick="saveKeys()" class="primary-btn">GUARDAR API KEYS</button>
-
-    <div style="margin-top:12px;background:#00e67611;border:1px solid #00e67633;border-radius:9px;padding:11px;font-size:11px;color:#546e7a;line-height:1.6">
-      🔍 <strong style="color:#00e676">Tavily</strong> busca datos reales en internet (últimos partidos, ranking, estadísticas actuales)<br>
-      🤖 <strong style="color:#ffc107">Groq</strong> analiza esos datos y genera los picks<br>
-      Ambas son <strong style="color:#eceff1">100% gratis</strong>
-    </div>
-  </div>
 
   <div class="card">
     <details>
@@ -406,8 +380,8 @@ Return ONLY a valid JSON object, no markdown, no explanation:
       "anthropic-dangerous-direct-browser-access":"true",
     },
     body:JSON.stringify({
-      model:"claude-sonnet-4-20250514",
-      max_tokens:1000,
+      model:"claude-opus-4-6",
+      max_tokens:1500,
       tools:[{type:"web_search_20250305",name:"web_search"}],
       messages:[{role:"user",content:prompt}],
     }),
