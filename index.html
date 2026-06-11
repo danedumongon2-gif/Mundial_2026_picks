@@ -378,30 +378,51 @@ async function fetchTeam(teamName){
   const isT1=teamName===document.getElementById("team1-select").value;
   const injuriesNote=isT1&&injuries1?`Absences: ${injuries1}. `:!isT1&&injuries2?`Absences: ${injuries2}. `:"";
 
-  // Step 1: Tavily fetches real web data (free)
+  // Step 1: Tavily fetches real web data (free) — two targeted searches
   let webData="";
   if(tavilyKey){
     try{
-      const r=await fetch("https://api.tavily.com/search",{
-        method:"POST",
-        headers:{"Content-Type":"application/json","Authorization":`Bearer ${tavilyKey}`},
-        body:JSON.stringify({
-          query:`${teamName} national team FIFA ranking 2025 recent results goals stats`,
-          search_depth:"basic",max_results:3,include_answer:true,include_raw_content:false
+      const [r1,r2]=await Promise.all([
+        fetch("https://api.tavily.com/search",{
+          method:"POST",
+          headers:{"Content-Type":"application/json","Authorization":`Bearer ${tavilyKey}`},
+          body:JSON.stringify({
+            query:`${teamName} national football team FIFA world ranking 2025 statistics`,
+            search_depth:"advanced",max_results:3,include_answer:true,include_raw_content:false
+          }),
         }),
-      });
-      if(r.ok){
-        const d=await r.json();
-        const ans=(d.answer||"").slice(0,400);
-        const snips=(d.results||[]).map(x=>(x.content||"").slice(0,150)).join(" ");
-        webData=(ans+" "+snips).slice(0,600);
+        fetch("https://api.tavily.com/search",{
+          method:"POST",
+          headers:{"Content-Type":"application/json","Authorization":`Bearer ${tavilyKey}`},
+          body:JSON.stringify({
+            query:`${teamName} national team last 5 matches results scores 2025`,
+            search_depth:"advanced",max_results:3,include_answer:true,include_raw_content:false
+          }),
+        }),
+      ]);
+      let part1="",part2="";
+      if(r1.ok){
+        const d=await r1.json();
+        const ans=(d.answer||"").trim();
+        const snips=(d.results||[]).map(x=>(x.content||"").slice(0,200)).join(" ").trim();
+        part1=(ans+" "+snips).trim();
       }
-    }catch(e){}
+      if(r2.ok){
+        const d=await r2.json();
+        const ans=(d.answer||"").trim();
+        const snips=(d.results||[]).map(x=>(x.content||"").slice(0,250)).join(" ").trim();
+        part2=(ans+" "+snips).trim();
+      }
+      const combined=`STATS: ${part1}\nRECENT MATCHES: ${part2}`.trim();
+      if(part1.length>30||part2.length>30) webData=combined.slice(0,1200);
+    }catch(e){console.log("Tavily fetch error:",e.message);}
   }
 
   // Step 2: Claude analyzes the data (NO web_search tool = much cheaper)
-  const context=webData?`Web data: ${webData}`:`Use your training knowledge about ${teamName} (note: may be slightly outdated).`;
-  const prompt=`${context}\n${injuriesNote}Extract stats for ${teamName} national football team. Return ONLY JSON:\n{"rank":<int>,"form":<0-3>,"gs":<num>,"gc":<num>,"shots":<num>,"shotsOnTarget":<num>,"shotsAgainst":<num>,"shotsOnTargetAgainst":<num>,"corners":<num>,"yellows":<num>,"reds":<num>,"att":<1-100>,"def":<1-100>,"confederation":"UEFA|CONMEBOL|CONCACAF|AFC|CAF|OFC","last5":["W 2-0 vs X","D 1-1 vs Y","L 0-1 vs Z","W 1-0 vs A","W 2-1 vs B"],"keyPlayers":["P1","P2","P3"],"firstHalfGoals":<num>,"notes":"brief form summary","dataQuality":"${webData?"web_verified":"estimated"}"}`;
+  const context=webData?`Web search data:\n${webData}`:`Use your training knowledge about ${teamName} (note: may be slightly outdated).`;
+  const prompt=`${context}\n${injuriesNote}Extract stats for ${teamName} national football team.
+IMPORTANT: For "last5", look in the RECENT MATCHES section above and extract the 5 most recent real match results with scores and opponents. If you cannot find real recent results, return an empty array [] instead of inventing matches.
+Return ONLY JSON:\n{"rank":<int>,"form":<0-3>,"gs":<num>,"gc":<num>,"shots":<num>,"shotsOnTarget":<num>,"shotsAgainst":<num>,"shotsOnTargetAgainst":<num>,"corners":<num>,"yellows":<num>,"reds":<num>,"att":<1-100>,"def":<1-100>,"confederation":"UEFA|CONMEBOL|CONCACAF|AFC|CAF|OFC","last5":["W 2-0 vs X","D 1-1 vs Y","L 0-1 vs Z","W 1-0 vs A","W 2-1 vs B"],"keyPlayers":["P1","P2","P3"],"firstHalfGoals":<num>,"notes":"brief form summary","dataQuality":"${webData?"web_verified":"estimated"}"}`;
 
   const res=await fetch("https://api.anthropic.com/v1/messages",{
     method:"POST",
@@ -413,7 +434,7 @@ async function fetchTeam(teamName){
     },
     body:JSON.stringify({
       model:"claude-haiku-4-5-20251001",
-      max_tokens:400,
+      max_tokens:500,
       // NO web_search tool here — Claude just analyzes the Tavily data
       messages:[{role:"user",content:prompt}],
     }),
@@ -538,7 +559,7 @@ function renderTeamCard(id,name,data,loading,error,color){
   el.innerHTML=`
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <span style="font-family:'Bebas Neue',sans-serif;font-size:17px;color:${color};letter-spacing:2px">${name}</span>
-      <span class="tag" style="background:${data.dataQuality==="api_football"?"#00e67622":data.dataQuality==="web_verified"?"#448aff22":"#ffc10722"};color:${data.dataQuality==="api_football"?"#00e676":data.dataQuality==="web_verified"?"#448aff":"#ffc107"};border:1px solid ${data.dataQuality==="api_football"?"#00e67644":data.dataQuality==="web_verified"?"#448aff44":"#ffc10744"};font-size:9px">${data.dataQuality==="api_football"?"✅ API REAL":data.dataQuality==="web_verified"?"🔍 WEB":"⚠️ ESTIMADO"}</span>
+      <span class="tag" style="background:${data.dataQuality==="web_verified"?"#00e67622":"#448aff22"};color:${data.dataQuality==="web_verified"?"#00e676":"#448aff"};border:1px solid ${data.dataQuality==="web_verified"?"#00e67644":"#448aff44"};font-size:9px">${data.dataQuality==="web_verified"?"🔍 WEB ACTUALIZADO":"📊 BASE VERIFICADA"}</span>
     </div>
     <div style="display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap">
       <div class="stat-box" style="border:1px solid ${color}33"><div class="stat-val" style="color:${color}">#${data.rank}</div><div class="stat-lbl">FIFA</div></div>
@@ -558,7 +579,7 @@ function renderTeamCard(id,name,data,loading,error,color){
       <div class="stat-box" style="border:1px solid #54607a33"><div class="stat-val" style="color:#546e7a;font-size:16px">${data.shotsAgainst||"?"}</div><div class="stat-lbl">Rem. recib.</div></div>
       <div class="stat-box" style="border:1px solid #54607a33"><div class="stat-val" style="color:#546e7a;font-size:16px">${data.shotsOnTargetAgainst||"?"}</div><div class="stat-lbl">A puerta rec.</div></div>
     </div>
-    ${last5?`<div style="margin-bottom:8px"><div style="font-size:9px;color:#546e7a;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">ÚLTIMOS 5</div><div style="display:flex;gap:3px;flex-wrap:wrap">${last5}</div></div>`:""}
+    ${last5?`<div style="margin-bottom:8px"><div style="font-size:9px;color:#546e7a;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">ÚLTIMOS 5</div><div style="display:flex;gap:3px;flex-wrap:wrap">${last5}</div></div>`:`<div style="margin-bottom:8px;font-size:10px;color:#546e7a;font-style:italic">Sin datos de últimos partidos disponibles</div>`}
     ${players?`<div style="margin-bottom:8px"><div style="font-size:9px;color:#546e7a;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">CLAVE</div><div style="display:flex;gap:3px;flex-wrap:wrap">${players}</div></div>`:""}
     ${data.notes?`<div style="font-size:10px;color:#546e7a;background:#0b0f1a;border-radius:7px;padding:6px 8px;border-left:3px solid ${color};font-style:italic">${data.notes}</div>`:""}`;
 }
